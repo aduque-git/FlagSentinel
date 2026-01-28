@@ -3,39 +3,22 @@
 Este documento recoge los cambios realizados en el proyecto FlagSentinel.  
 El formato sigue el estándar *Keep a Changelog*.
 
----
+# Changelog 
+## [1.0.1] - 2026-01-28 
+### Added 
+- Modelos JPA: FeatureFlag y Rule 
+- DTOs de entrada, salida e intermedios
+- Mappers para conversión entre entidades y DTOs 
+- Controladores refactorizados para CRUD de flags y reglas 
+- Motor de evaluación de reglas (FlagEvaluator) 
+- Servicio de evaluación de flags 
+- Base del sistema de seguridad con JWT 
+- AuthController para login 
 
-## [Unreleased]
-- Pendiente de nuevas funcionalidades
-- Mejoras en documentación
-- Ajustes internos
+### Changed 
+- Servicios actualizados con métodos getById y update 
+- Controladores reorganizados para no exponer entidades JPA 
 
----
-
-## [0.1.0] — Primera versión estructural
-### Añadido
-- Estructura inicial del repositorio
-- Módulo `flagsentinel-api` con README
-- Módulo `flagsentinel-panel` con README
-- Módulo `flagsentinel-sdk-java` con README
-- Módulo `flagsentinel-demo-app` con README
-- Documentos principales:
-  - README.md
-  - ARCHITECTURE.md
-  - RULE_ENGINE.md
-  - API_REFERENCE.md
-  - USAGE_EXAMPLE.md
-  - SECURITY.md
-  - CONTRIBUTING.md
-
-### Cambiado
-- Organización del proyecto en módulos independientes
-
-### Eliminado
-- Nada en esta versión
-
----
-
-## Notas
-- Las versiones siguen semántica básica: MAJOR.MINOR.PATCH
-- Cada módulo evoluciona de forma independiente, pero se versiona el conjunto
+### Notes 
+- Preparado para configurar entornos (dev, prod, test) 
+- Pendiente completar seguridad avanzada y configuración de perfiles
