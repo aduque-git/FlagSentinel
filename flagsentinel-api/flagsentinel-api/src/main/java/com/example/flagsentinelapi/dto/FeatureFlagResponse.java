@@ -12,10 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeatureFlagResponse {
-
     private Long id;
     private String key;
     private boolean enabled;
     private List<RuleResponse> rules;
-
 }

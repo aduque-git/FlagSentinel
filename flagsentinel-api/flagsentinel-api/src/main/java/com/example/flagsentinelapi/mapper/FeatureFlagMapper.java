@@ -3,63 +3,60 @@ package com.example.flagsentinelapi.mapper;
 import com.example.flagsentinelapi.dto.*;
 import com.example.flagsentinelapi.model.FeatureFlag;
 import com.example.flagsentinelapi.model.Rule;
-import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+@Component
+@RequiredArgsConstructor
 public class FeatureFlagMapper {
 
-    public static FeatureFlag toEntity(CreateFeatureFlagRequest dto) {
-        if (dto == null) return null;
+    private final RuleMapper ruleMapper;
 
+    public FeatureFlag toEntity(CreateFeatureFlagRequest request) {
         FeatureFlag flag = new FeatureFlag();
-        flag.setKey(dto.getKey());
-        flag.setEnabled(dto.isEnabled());
-
-        if (dto.getRules() != null) {
-            List<Rule> rules = new ArrayList<>();
-            for (RuleDTO ruleDTO : dto.getRules()) {
-                Rule rule = RuleMapper.toEntity(ruleDTO);
-                rules.add(rule);
-            }
+        flag.setKey(request.getKey());
+        flag.setEnabled(request.isEnabled());
+        if (request.getRules() != null) {
+            List<Rule> rules = request.getRules().stream().map(ruleMapper::toEntity).toList();
             flag.setRules(rules);
         }
-
         return flag;
     }
 
-    public static FeatureFlag toEntity(UpdateFeatureFlagRequest dto, FeatureFlag existing) {
-        if (dto == null || existing == null) return existing;
-
-        existing.setKey(dto.getKey());
-        existing.setEnabled(dto.isEnabled());
-
-        List<Rule> rules = new ArrayList<>();
-        if (dto.getRules() != null) {
-            for (RuleDTO ruleDTO : dto.getRules()) {
-                Rule rule = RuleMapper.toEntity(ruleDTO);
-                rules.add(rule);
-            }
+    public void updateEntity(FeatureFlag flag, UpdateFeatureFlagRequest request) {
+        flag.setKey(request.getKey());
+        flag.setEnabled(request.isEnabled());
+        if (request.getRules() != null) {
+            List<Rule> rules = request.getRules().stream().map(ruleMapper::toEntity).toList();
+            flag.setRules(rules);
         }
-
-        existing.setRules(rules);
-        return existing;
     }
 
-    public static FeatureFlagResponse toResponse(FeatureFlag flag) {
-        if (flag == null) return null;
-
-        List<RuleResponse> ruleResponses = new ArrayList<>();
+    public FeatureFlagResponse toResponse(FeatureFlag flag) {
+        FeatureFlagResponse dto = new FeatureFlagResponse();
+        dto.setId(flag.getId());
+        dto.setKey(flag.getKey());
+        dto.setEnabled(flag.isEnabled());
         if (flag.getRules() != null) {
-            for (Rule rule : flag.getRules()) {
-                ruleResponses.add(RuleMapper.toResponse(rule));
-            }
+            dto.setRules(flag.getRules().stream().map(ruleMapper::toResponse).toList());
         }
+        return dto;
+    }
 
-        return new FeatureFlagResponse(
-                flag.getId(),
-                flag.getKey(),
-                flag.isEnabled(),
-                ruleResponses
-        );
+    public FeatureFlagDTO toDTO(FeatureFlag entity) {
+        FeatureFlagDTO dto = new FeatureFlagDTO();
+        dto.setKey(entity.getKey());
+        dto.setEnabled(entity.isEnabled());
+        if (entity.getRules() != null) {
+            dto.setRules(
+                    entity.getRules()
+                            .stream()
+                            .map(ruleMapper::toDTO)
+                            .toList()
+            );
+        }
+        return dto;
     }
 }

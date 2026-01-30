@@ -6,6 +6,7 @@ import com.example.flagsentinelapi.dto.UpdateRuleRequest;
 import com.example.flagsentinelapi.mapper.RuleMapper;
 import com.example.flagsentinelapi.model.Rule;
 import com.example.flagsentinelapi.service.RuleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,60 +17,35 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/rules")
+@RequiredArgsConstructor
 public class RuleController {
 
-    @Autowired
-    private RuleService service;
+    private final RuleService service;
 
-    public RuleController(RuleService service) {
-        this.service = service;
+    @PostMapping
+    public ResponseEntity<RuleResponse> create(@RequestBody CreateRuleRequest request) {
+        return ResponseEntity.ok(service.create(request));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RuleResponse> update(@PathVariable Long id, @RequestBody UpdateRuleRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 
     @GetMapping
     public ResponseEntity<List<RuleResponse>> getAll() {
-        List<Rule> rules = service.getAll();
-        List<RuleResponse> responses = new ArrayList<>();
-
-        for (Rule rule : rules) {
-            responses.add(RuleMapper.toResponse(rule));
-        }
-
-        return new ResponseEntity<>(responses, HttpStatus.OK);
+        return ResponseEntity.ok(service.getAll());
     }
 
-    @PostMapping
-    public ResponseEntity<RuleResponse> create(@RequestBody CreateRuleRequest request) {
-        Rule rule = RuleMapper.toEntity(request);
-        Rule saved = service.create(rule);
-
-        return new ResponseEntity<>(RuleMapper.toResponse(saved), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<RuleResponse> update(
-            @PathVariable("id") Long id,
-            @RequestBody UpdateRuleRequest request
-    ) {
-        Rule existing = service.getById(id);
-        if (existing == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Rule updated = RuleMapper.toEntity(request);
-        updated.setId(id);
-
-        Rule saved = service.update(id, updated);
-
-        return new ResponseEntity<>(RuleMapper.toResponse(saved), HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<RuleResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        boolean deleted = service.delete(id);
-        if (!deleted) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
+
 }

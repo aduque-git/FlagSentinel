@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateRuleRequest {
-
     private String attribute;
     private String operator;
     private String value;
-
 }
