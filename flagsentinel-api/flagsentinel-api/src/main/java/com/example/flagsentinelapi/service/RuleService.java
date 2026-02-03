@@ -26,29 +26,36 @@ public class RuleService {
         Rule saved = repo.save(rule);
         RuleResponse response = mapper.toResponse(saved);
         ws.publishRuleUpdate(response);
-        return mapper.toResponse(saved);
+        return response;
     }
 
     public RuleResponse update(Long id, UpdateRuleRequest request) {
-        Rule rule = repo.findById(id).orElseThrow(() -> new RuntimeException("Rule not found"));
+        Rule rule = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rule not found"));
+
         mapper.updateEntity(rule, request);
+
         Rule saved = repo.save(rule);
         RuleResponse response = mapper.toResponse(saved);
         ws.publishRuleUpdate(response);
-        return mapper.toResponse(saved);
+        return response;
     }
 
     public RuleResponse getById(Long id) {
-        Rule rule = repo.findById(id).orElseThrow(() -> new RuntimeException("Rule not found"));
+        Rule rule = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rule not found"));
         return mapper.toResponse(rule);
     }
 
     public List<RuleResponse> getAll() {
-        return repo.findAll().stream().map(mapper::toResponse).toList();
+        return repo.findAll().stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 
     public void delete(Long id) {
-        Rule rule = repo.findById(id).orElseThrow(() -> new RuntimeException("Rule not found"));
+        Rule rule = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rule not found"));
         repo.delete(rule);
         ws.publishRuleUpdate("deleted:" + id);
     }

@@ -27,7 +27,7 @@ public class FlagEvaluationService {
     public FlagEvaluationResponse evaluate(FlagEvaluationRequest request) {
 
         // 1. Buscar flag
-        FeatureFlag flag = flagRepo.findByKey(request.getKey()).orElse(null);
+        FeatureFlag flag = flagRepo.findByFlagCode(request.getKey()).orElse(null);
         if (flag == null) {
             return mapper.toResponse(request.getKey(), false, "Flag not found");
         }
@@ -36,6 +36,6 @@ public class FlagEvaluationService {
 
 
         boolean enabled = flagEvaluator.isEnabledFor(flagMapper.toDTO(flag), request.getAttributes());
-        return mapper.toResponse(flag.getKey(), enabled, enabled ? "Rules passed" : "Rules failed");
+        return mapper.toResponse(flag.getFlagCode(), enabled, enabled ? "Rules passed" : "Rules failed");
     }
 }

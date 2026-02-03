@@ -50,6 +50,7 @@ public class UserService {
     }
 
     public void delete(Long id) {
+        System.out.println("CURRO: " + id);
         User user = repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         repo.delete(user);
     }

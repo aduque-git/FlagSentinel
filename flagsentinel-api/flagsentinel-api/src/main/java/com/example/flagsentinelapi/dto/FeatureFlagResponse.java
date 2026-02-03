@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class FeatureFlagResponse {
     private Long id;
-    private String key;
+    private String flagCode;
     private boolean enabled;
     private List<RuleResponse> rules;
 }

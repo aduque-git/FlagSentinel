@@ -30,6 +30,10 @@ public class JwtUtil {
         }
     }
 
+    /*
+     * Mirar como usar un GUID o correo para subject al crear el token no usar el username
+     * ver tambien si la key para firmar es recomendable tenerla en un cert en cacert
+     */
     public String generateToken(String username) {
         return Jwts.builder().setSubject(username).setExpiration(new Date(System.currentTimeMillis() + expiration)).signWith(key).compact();
     }

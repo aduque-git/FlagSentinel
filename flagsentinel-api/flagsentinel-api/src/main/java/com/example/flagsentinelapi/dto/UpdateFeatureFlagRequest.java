@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateFeatureFlagRequest {
-    private String key;
+    private String flagCode;
     private boolean enabled;
-    private List<RuleDTO> rules;
+    private List<Long> ruleCodes;
 }

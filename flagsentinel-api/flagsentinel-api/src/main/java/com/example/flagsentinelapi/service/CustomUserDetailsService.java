@@ -2,7 +2,6 @@ package com.example.flagsentinelapi.service;
 
 import com.example.flagsentinelapi.model.User;
 import com.example.flagsentinelapi.repository.UserRepository;
-import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,9 +17,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = repo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        System.out.println("USER: " + user.getUsername()  + " - " + user.getPassword() + " - " + user.getRole().name());
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
