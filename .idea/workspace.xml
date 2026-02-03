@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="45b47b7e-ccd0-4d35-a433-ac2f97959f33" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/swagger-settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/config/AdminInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/config/DataInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/dto/LoginRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/dto/LoginResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Proyecto_FlagSentinel.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/config/JacksonConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/config/OpenApiConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/config/OpenApiConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/controller/FeatureFlagController.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/controller/FeatureFlagController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/dto/CreateFeatureFlagRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/dto/CreateFeatureFlagRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/dto/FeatureFlagDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/dto/FeatureFlagDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/dto/FeatureFlagResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/dto/FeatureFlagResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/dto/UpdateFeatureFlagRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/dto/UpdateFeatureFlagRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/mapper/FeatureFlagMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/mapper/FeatureFlagMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/mapper/RuleMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/mapper/RuleMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/model/FeatureFlag.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/model/FeatureFlag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/model/Rule.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/model/Rule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/repository/FeatureFlagRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/repository/FeatureFlagRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/repository/RuleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/repository/RuleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/security/JwtFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/security/JwtFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/security/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/security/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/service/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/service/CustomUserDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/service/FeatureFlagService.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/service/FeatureFlagService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/service/FlagEvaluationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/service/FlagEvaluationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/service/RuleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/service/RuleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/resources/application-dev.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/FlagsentinelApiApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/FlagsentinelApiApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/config/MockMvcConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/controller/AuthControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/factory/FeatureFlagTestFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/factory/FeatureFlagTestFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/service/FeatureFlagServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/service/FeatureFlagServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/service/FlagEvaluationServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/test/java/com/example/flagsentinelapi/service/FlagEvaluationServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-sdk-java/flagsentinel-sdk-java/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-sdk-java/flagsentinel-sdk-java/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-sdk-java/flagsentinel-sdk-java/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-sdk-java/flagsentinel-sdk-java/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-sdk-java/flagsentinel-sdk-java/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flagsentinel-sdk-java/flagsentinel-sdk-java/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="394us4YHCsbhYOzAgTxJNfd6ALM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.flagsentinel [spring-boot:run].executor": "Run",
+    "Maven.flagsentinel-api [clean].executor": "Run",
+    "Maven.flagsentinel-api [install].executor": "Run",
+    "Maven.flagsentinel-api [spring-boot:run].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.FlagsentinelApiApplication.executor": "Run",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "develop",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.20627451",
+    "project.structure.side.proportion": "0.5469832",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\SourceTree\Git\Proyecto_FlagSentinel\flagsentinel-api\flagsentinel-api\src\main\resources\static" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Maven.flagsentinel-api [spring-boot:run]">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Proyecto_FlagSentinel" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Proyecto_FlagSentinel" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="flagsentinel-api [spring-boot:run]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="spring-boot:run" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="FlagsentinelApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="flagsentinel-api" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.flagsentinelapi.FlagsentinelApiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Maven.flagsentinel-api [spring-boot:run]" />
+      <item itemvalue="Spring Boot.FlagsentinelApiApplication" />
+    </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.240" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.240" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="45b47b7e-ccd0-4d35-a433-ac2f97959f33" name="Changes" comment="" />
+      <created>1769967869302</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1769967869302</updated>
+      <workItem from="1769967870755" duration="3067000" />
+      <workItem from="1770015595010" duration="429000" />
+      <workItem from="1770016047229" duration="26057000" />
+      <workItem from="1770102583843" duration="10981000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/model/FeatureFlag.java</url>
+          <line>37</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/src/main/java/com/example/flagsentinelapi/controller/FeatureFlagController.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

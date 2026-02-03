@@ -25,30 +25,21 @@ public class RuleMapper {
     }
 
     public RuleResponse toResponse(Rule rule) {
-        RuleResponse dto = new RuleResponse();
-        dto.setId(rule.getId());
-        dto.setAttribute(rule.getAttribute());
-        dto.setOperator(rule.getOperator());
-        dto.setValue(rule.getValue());
-        return dto;
-    }
-
-    // Para FeatureFlag
-    public Rule toEntity(RuleDTO dto) {
-        Rule rule = new Rule();
-        rule.setId(dto.getId());
-        rule.setAttribute(dto.getAttribute());
-        rule.setOperator(dto.getOperator());
-        rule.setValue(dto.getValue());
-        return rule;
+        return new RuleResponse(
+                rule.getId(),
+                rule.getAttribute(),
+                rule.getOperator(),
+                rule.getValue()
+        );
     }
 
     public RuleDTO toDTO(Rule rule) {
-        RuleDTO dto = new RuleDTO();
-        dto.setId(rule.getId());
-        dto.setAttribute(rule.getAttribute());
-        dto.setOperator(rule.getOperator());
-        dto.setValue(rule.getValue());
-        return dto;
+        return new RuleDTO(
+                rule.getId(),
+                rule.getAttribute(),
+                rule.getOperator(),
+                rule.getValue()
+        );
     }
 }
+

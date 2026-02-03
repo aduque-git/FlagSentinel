@@ -57,6 +57,10 @@ public class SecurityConfig {
                 //  ENDPOINTS PÚBLICOS
                 // ============================
 
+                // Swagger Api Docs
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs",
+                        "/v3/api-docs.yaml", "/v3/api-docs/**", "/v3/api-docs/swagger-config", "/openapi.yaml",
+                        "/error").permitAll()
                 // Login
                 .requestMatchers("/api/auth/**").permitAll()
 
@@ -97,8 +101,6 @@ public class SecurityConfig {
                 // Users: lectura
                 .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("USER", "ADMIN")
 
-                // Swagger Api Docs
-                .requestMatchers( "/swagger-ui/**", "/v3/api-docs/**" ).permitAll()
 
                 // ============================
                 //  CUALQUIER OTRA RUTA

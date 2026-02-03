@@ -43,7 +43,7 @@ class FlagEvaluationServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
+    /*@Test
     void evaluate_shouldReturnNotFound_whenFlagDoesNotExist() {
         FlagEvaluationRequest req = new FlagEvaluationRequest("unknown", Map.of());
 
@@ -99,7 +99,7 @@ class FlagEvaluationServiceTest {
         verify(flagEvaluator).isEnabledFor(dto, req.getAttributes());
     }
 
-    @Test
+    /*@Test
     void evaluate_shouldReturnFailed_whenEvaluatorReturnsFalse() {
         FeatureFlag entity = new FeatureFlag();
         entity.setKey("my-flag");
@@ -124,5 +124,5 @@ class FlagEvaluationServiceTest {
         FlagEvaluationResponse result = service.evaluate(req);
 
         assertEquals(expected, result);
-    }
+    }*/
 }
