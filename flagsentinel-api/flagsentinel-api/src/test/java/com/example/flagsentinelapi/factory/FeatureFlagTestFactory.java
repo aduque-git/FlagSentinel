@@ -7,14 +7,14 @@ public class FeatureFlagTestFactory {
 
     public static FeatureFlag createEnabledFlag(String key) {
         FeatureFlag flag = new FeatureFlag();
-        flag.setKey(key);
+        flag.setFlagCode(key);
         flag.setEnabled(true);
         return flag;
     }
 
     public static FeatureFlag createDisabledFlag(String key) {
         FeatureFlag flag = new FeatureFlag();
-        flag.setKey(key);
+        flag.setFlagCode(key);
         flag.setEnabled(false);
         return flag;
     }

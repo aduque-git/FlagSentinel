@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeatureFlagDTO {
-    private String key;
+    private String flagCode;
     private boolean enabled;
     private List<RuleDTO> rules;
 }

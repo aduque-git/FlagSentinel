@@ -27,6 +27,10 @@ public class FeatureFlagController {
         return ResponseEntity.ok(service.create(request));
     }
 
+    /*
+     * DEbo ddejarr este endpoint solo para updatear los datos de la propia flag, para añadir reglas
+     *  a un flag creado tengo que crear otro endpoint
+     */
     @PutMapping("/{id}")
     public ResponseEntity<FeatureFlagResponse> update(@PathVariable Long id, @RequestBody UpdateFeatureFlagRequest request) {
         return ResponseEntity.ok(service.update(id, request));

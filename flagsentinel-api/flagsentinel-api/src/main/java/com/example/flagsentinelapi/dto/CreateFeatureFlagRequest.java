@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CreateFeatureFlagRequest {
 
-    private String key;
+    private String flagCode;
     private boolean enabled;
-    private List<RuleDTO> rules;
+    private List<Long> ruleCodes;
 
 }
