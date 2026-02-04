@@ -1,4 +1,4 @@
-package org.example.flagsentinelpanel;
+package com.example.flagsentinelpanel;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -6,7 +6,6 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/flagsentinel-api/flagsentinel-api/pom.xml" />
-        <option value="$PROJECT_DIR$/flagsentinel-panel/flagsentinel-panel/pom.xml" />
       </list>
     </option>
   </component>

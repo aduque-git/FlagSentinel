@@ -1,41 +1,34 @@
-### MAVEN ###
+node_modules
+HELP.md
 target/
-!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-### VAADIN / VITE / NODE ###
-node_modules/
-pnpm-lock.yaml
-package-lock.json
-npm-debug.log
-pnpm-debug.log
-vite.config.ts
-vite.generated.ts
-frontend/generated/
-.vite/
-.vaadin/
-webpack.generated.js
-types.d.ts
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-### IDEs ###
-# IntelliJ
-.idea/
-*.iml
+### IntelliJ IDEA ###
+.idea
 *.iws
+*.iml
 *.ipr
 
-# VS Code
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
 .vscode/
-
-### LOGS ###
-*.log
-
-### OS FILES ###
-.DS_Store
-Thumbs.db
-
-### JAVA ###
-*.class
-
-### TEMP ###
-*.tmp
-*.swp
