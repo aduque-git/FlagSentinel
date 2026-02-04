@@ -36,7 +36,7 @@ public class CorsConfig {
 
                 registry.addMapping("/**") // Aplica CORS a todos los clientes permitidos
                         .allowedOrigins(
-                                "http://localhost:3000",
+                                "http://localhost:8081",
                                 "http://localhost:4200",
                                 "http://localhost:5173"
                         ) // Orígenes permitidos (React, Angular, Vite, etc.)
