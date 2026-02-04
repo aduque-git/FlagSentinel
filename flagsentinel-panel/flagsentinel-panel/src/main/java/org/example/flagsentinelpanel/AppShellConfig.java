@@ -5,4 +5,5 @@ import com.vaadin.flow.theme.Theme;
 
 @Theme("flagsentinel")
 public class AppShellConfig implements AppShellConfigurator {
+    //a
 }
