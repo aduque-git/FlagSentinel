@@ -1,10 +1,9 @@
-package org.example.flagsentinelpanel.views;
+package org.example.flagsentinelpanel.ui.main;
 
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
-import org.example.flagsentinelpanel.layout.MainLayout;
 
 @PermitAll
 @Route(value = "main", layout = MainLayout.class)
