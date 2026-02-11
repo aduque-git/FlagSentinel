@@ -19,6 +19,7 @@ types.d.ts
 ### IDEs ###
 # IntelliJ
 .idea/
+.idea/workspace.xml
 *.iml
 *.iws
 *.ipr

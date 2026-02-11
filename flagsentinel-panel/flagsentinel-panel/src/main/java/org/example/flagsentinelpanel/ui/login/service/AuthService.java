@@ -1,4 +1,4 @@
-package org.example.flagsentinelpanel.service;
+package org.example.flagsentinelpanel.ui.login.service;
 
 
 import com.vaadin.flow.server.VaadinSession;
@@ -37,6 +37,7 @@ public class AuthService {
 
                 // Guardamos el token en la sesión Vaadin
                 VaadinSession.getCurrent().setAttribute("token", token);
+                System.out.println("TOKEN EN MAINVIEW = " + token);
 
                 return true;
             }

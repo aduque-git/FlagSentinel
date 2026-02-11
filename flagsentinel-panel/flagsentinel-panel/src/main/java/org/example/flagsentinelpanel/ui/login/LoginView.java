@@ -1,17 +1,19 @@
-package org.example.flagsentinelpanel.views;
+package org.example.flagsentinelpanel.ui.login;
 
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 import jakarta.annotation.security.PermitAll;
 import org.example.flagsentinelpanel.service.SecurityService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.util.List;
 
@@ -24,87 +26,97 @@ public class LoginView extends VerticalLayout {
     public LoginView(SecurityService securityService) {
         this.securityService = securityService;
 
-        // Pantalla completa, centrada
+        // ============================
+        // Layout principal
+        // ============================
         setSizeFull();
         setPadding(false);
         setSpacing(false);
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
-        // Fondo degradado azul–negro
-        String gradient = "linear-gradient(135deg, #050816 0%, #07111F 35%, #001F3F 100%)";
+        // Fondo global igual al de la app
+        String gradient = "linear-gradient(135deg, #0A0F1E 0%, #161B33 50%, #0C0F20 100%)";
         getStyle().set("background", gradient);
 
-        // Card central tipo “glassmorphism”
+        // ============================
+        // Card central (glassmorphism)
+        // ============================
         VerticalLayout card = new VerticalLayout();
         card.setWidth("420px");
         card.setPadding(true);
         card.setSpacing(true);
         card.setAlignItems(Alignment.CENTER);
         card.getStyle()
-                .set("background", "rgba(10, 14, 25, 0.9)")
+                .set("background", "rgba(28, 30, 50, 0.95)")  // mismo que inputs
                 .set("backdrop-filter", "blur(14px)")
-                .set("border-radius", "18px")
+                .set("border-radius", "16px")
                 .set("padding", "40px")
-                .set("border", "1px solid rgba(0, 122, 255, 0.5)")
-                .set("box-shadow", "0 0 30px rgba(0, 122, 255, 0.35)");
+                .set("border", "1px solid rgba(128, 0, 255, 0.8)")
+                .set("box-shadow", "0 0 20px rgba(128, 0, 255, 0.25)");
 
+        // ============================
+        // Título y subtítulo
+        // ============================
         H1 title = new H1("FlagSentinel");
         title.getStyle()
-                .set("color", "#E5ECF5")
-                .set("font-size", "2.3rem")
+                .set("color", "#FFFFFF")
+                .set("font-size", "2rem")
                 .set("margin-bottom", "4px");
 
         Span subtitle = new Span("Acceso al panel de administración");
         subtitle.getStyle()
-                .set("color", "#8FA3BF")
+                .set("color", "#A3B1D1")  // mismo que labels de inputs
                 .set("font-size", "0.95rem")
                 .set("margin-bottom", "22px");
 
+        // ============================
+        // LoginForm
+        // ============================
         LoginForm loginForm = new LoginForm();
         loginForm.setForgotPasswordButtonVisible(false);
         loginForm.getStyle().set("width", "100%");
 
-        // Fondo del LoginForm igual que el fondo general
+        // Ajustamos el LoginForm para que tenga fondo del card
         loginForm.getElement().executeJs("""
-                    const host = this;
-                    host.style.background = arguments[0];
-                    host.style.borderRadius = "12px";
-                    host.style.padding = "20px";
-                """, gradient);
+            const host = this;
+            host.style.background = "rgba(28, 30, 50, 0.95)";
+            host.style.borderRadius = "12px";
+            host.style.padding = "20px";
+            host.style.color = "#FFFFFF";
+        """);
 
-
+        // ============================
         // LOGIN REAL
+        // ============================
         loginForm.addLoginListener(e -> {
-            try {
+            UI ui = UI.getCurrent();
+            ui.access(() -> {
                 boolean ok = securityService.login(e.getUsername(), e.getPassword());
-
                 if (ok) {
-                    // Recuperamos el token guardado en VaadinSession
-                    String token = securityService.getToken();
-
-                    // Creamos la autenticación para Spring Security
-                    var auth = new UsernamePasswordAuthenticationToken(
+                    String token = VaadinSession.getCurrent().getAttribute("token").toString();
+                    Authentication auth = new UsernamePasswordAuthenticationToken(
                             e.getUsername(),
                             token,
                             List.of(new SimpleGrantedAuthority("ROLE_USER"))
                     );
 
                     SecurityContextHolder.getContext().setAuthentication(auth);
+                    VaadinSession.getCurrent().getSession().setAttribute(
+                            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                            SecurityContextHolder.getContext()
+                    );
 
-                    // Navegamos a la vista principal
-                    UI.getCurrent().navigate("main");
-
+                    ui.navigate("main");
                 } else {
                     loginForm.setError(true);
                 }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                loginForm.setError(true);
-            }
+            });
         });
 
+        // ============================
+        // Añadimos al layout
+        // ============================
         card.add(title, subtitle, loginForm);
         add(card);
     }
