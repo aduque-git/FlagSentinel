@@ -3,6 +3,8 @@ package com.example.flagsentinelapi.service;
 import com.example.flagsentinelapi.dto.CreateUserRequest;
 import com.example.flagsentinelapi.dto.UpdateUserRequest;
 import com.example.flagsentinelapi.dto.UserResponse;
+import com.example.flagsentinelapi.exception.ConflictException;
+import com.example.flagsentinelapi.exception.NotFoundException;
 import com.example.flagsentinelapi.mapper.UserMapper;
 import com.example.flagsentinelapi.model.User;
 import com.example.flagsentinelapi.repository.UserRepository;
@@ -25,33 +27,47 @@ public class UserService {
     }
 
     public UserResponse create(CreateUserRequest request) {
+
         if (repo.findByUsername(request.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
+            throw new ConflictException("Username already exists");
         }
+
         User user = mapper.toEntity(request, encoder.encode(request.getPassword()));
         User saved = repo.save(user);
+
         return mapper.toResponse(saved);
     }
 
     public UserResponse update(Long id, UpdateUserRequest request) {
-        User user = repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        User user = repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
         mapper.updateEntity(user, request);
         User saved = repo.save(user);
+
         return mapper.toResponse(saved);
     }
 
     public UserResponse getById(Long id) {
-        User user = repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        User user = repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
         return mapper.toResponse(user);
     }
 
     public List<UserResponse> getAll() {
-        return repo.findAll().stream().map(mapper::toResponse).toList();
+        return repo.findAll().stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 
     public void delete(Long id) {
-        System.out.println("CURRO: " + id);
-        User user = repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        User user = repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
         repo.delete(user);
     }
 }
