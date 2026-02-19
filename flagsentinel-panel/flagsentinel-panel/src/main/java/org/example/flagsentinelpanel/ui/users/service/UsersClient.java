@@ -1,11 +1,13 @@
 package org.example.flagsentinelpanel.ui.users.service;
 
-import org.example.flagsentinelpanel.dto.CreateUserRequest;
-import org.example.flagsentinelpanel.dto.UpdateUserRequest;
-import org.example.flagsentinelpanel.dto.UserResponse;
+import org.example.flagsentinelpanel.config.AppPropertyKeys;
+import org.example.flagsentinelpanel.dto.*;
+import org.example.flagsentinelpanel.service.BaseApiClient;
 import org.example.flagsentinelpanel.service.SecurityService;
+import org.example.flagsentinelpanel.util.AppProperties;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,81 +15,64 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class UsersClient {
-
-    private final RestTemplate restTemplate;
-    private final SecurityService securityService;
-    private final String baseUrl;
+public class UsersClient extends BaseApiClient {
 
     public UsersClient(RestTemplate restTemplate,
                        SecurityService securityService,
-                       @Value("${api.base-url}") String baseUrl) {
-        this.restTemplate = restTemplate;
-        this.securityService = securityService;
-        this.baseUrl = baseUrl;
-    }
-
-    private HttpHeaders buildHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        String token = securityService.getToken();
-        if (token != null && !token.isBlank()) {
-            headers.set("Authorization", "Bearer " + token);
-        }
-
-        return headers;
+                       AppProperties properties) {
+        super(restTemplate, securityService, properties.get(AppPropertyKeys.BASE_URL));
     }
 
     public List<UserResponse> getAllUsers() {
-        HttpEntity<Void> entity = new HttpEntity<>(buildHeaders());
-
-        ResponseEntity<UserResponse[]> response = restTemplate.exchange(
+        UserResponse[] arr = exchange(
                 baseUrl + "/users",
                 HttpMethod.GET,
-                entity,
+                null,
                 UserResponse[].class
         );
-
-        return Arrays.asList(response.getBody());
+        return Arrays.asList(arr);
     }
 
     public UserResponse createUser(CreateUserRequest body) {
-        HttpEntity<CreateUserRequest> entity = new HttpEntity<>(body, buildHeaders());
-
-        ResponseEntity<UserResponse> response = restTemplate.exchange(
+        return exchange(
                 baseUrl + "/users",
                 HttpMethod.POST,
-                entity,
+                body,
                 UserResponse.class
         );
-
-        return response.getBody();
     }
 
     public UserResponse updateUser(Long id, UpdateUserRequest body) {
-        HttpEntity<UpdateUserRequest> entity = new HttpEntity<>(body, buildHeaders());
-
-        ResponseEntity<UserResponse> response = restTemplate.exchange(
+        return exchange(
                 baseUrl + "/users/{id}",
                 HttpMethod.PUT,
-                entity,
+                body,
                 UserResponse.class,
                 id
         );
-
-        return response.getBody();
     }
 
     public void deleteUser(Long id) {
-        HttpEntity<Void> entity = new HttpEntity<>(buildHeaders());
-
-        restTemplate.exchange(
+        exchange(
                 baseUrl + "/users/{id}",
                 HttpMethod.DELETE,
-                entity,
+                null,
                 Void.class,
                 id
+        );
+    }
+
+
+
+    public PageResponse<UserResponse> findPaged(int page, int size) {
+        String url = baseUrl + "/users/paged?page=" + page + "&size=" + size;
+
+        return exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                }
         );
     }
 }

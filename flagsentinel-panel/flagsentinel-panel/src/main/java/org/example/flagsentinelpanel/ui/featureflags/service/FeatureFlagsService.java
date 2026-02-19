@@ -1,8 +1,6 @@
 package org.example.flagsentinelpanel.ui.featureflags.service;
 
-import org.example.flagsentinelpanel.dto.CreateFeatureFlagRequest;
-import org.example.flagsentinelpanel.dto.FeatureFlagResponse;
-import org.example.flagsentinelpanel.dto.UpdateFeatureFlagRequest;
+import org.example.flagsentinelpanel.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,4 +29,6 @@ public class FeatureFlagsService {
     public void delete(Long id) {
         client.delete(id);
     }
+
+    public PageResponse<FeatureFlagResponse> findPaged(int page, int size) {return client.findPaged(page, size); }
 }

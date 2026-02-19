@@ -12,23 +12,26 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import org.example.flagsentinelpanel.dto.CreateUserRequest;
-import org.example.flagsentinelpanel.dto.Role;
-import org.example.flagsentinelpanel.dto.UpdateUserRequest;
-import org.example.flagsentinelpanel.dto.UserResponse;
+import org.example.flagsentinelpanel.dto.*;
+import org.example.flagsentinelpanel.exceptions.ApiClientException;
 import org.example.flagsentinelpanel.ui.components.AbstractCrudGrid;
+import org.example.flagsentinelpanel.ui.components.PaginationProperties;
 import org.example.flagsentinelpanel.ui.users.service.UsersService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class UserListComponent extends AbstractCrudGrid<UserResponse> {
 
     private final UsersService usersService;
+    private final PaginationProperties pagination;
 
-    public UserListComponent(UsersService usersService) {
+    public UserListComponent(UsersService usersService, PaginationProperties pagination) {
         super(UserResponse.class, new Span("Users"));
         this.usersService = usersService;
+        this.pagination = pagination;
+
         init();
     }
 
@@ -50,18 +53,20 @@ public class UserListComponent extends AbstractCrudGrid<UserResponse> {
 
         colUsername.setEditorComponent(usernameField);
 
-        // ROLE como ComboBox<Role>
+        // ROLE
         ComboBox<Role> roleField = new ComboBox<>();
         roleField.setItems(Role.values());
         roleField.setItemLabelGenerator(Enum::name);
         roleField.addClassName("user-role-combo");
         roleField.setAllowCustomValue(false);
-        roleField.getElement().executeJs("this.shadowRoot.querySelector('input').setAttribute('readonly', true);");
+        roleField.getElement().executeJs(
+                "this.shadowRoot.querySelector('input').setAttribute('readonly', true);"
+        );
 
         binder.forField(roleField)
                 .withConverter(
-                        role -> role == null ? null : role.name(),          // Role -> String
-                        str -> str == null ? null : Role.valueOf(str)       // String -> Role
+                        role -> role == null ? null : role.name(),
+                        str -> str == null ? null : Role.valueOf(str)
                 )
                 .bind("role");
 
@@ -73,16 +78,19 @@ public class UserListComponent extends AbstractCrudGrid<UserResponse> {
 
         colRole.setEditorComponent(roleField);
 
-
-        // ACTIONS (calcado de RuleListComponent)
+        // ACTIONS
         grid.addComponentColumn(user -> {
 
                     HorizontalLayout actions = new HorizontalLayout();
-                    actions.addClassName("no-hover"); // 👈 CLAVE
+                    actions.addClassName("no-hover");
+
+                    rowButtons.computeIfAbsent(user, k -> new ArrayList<>());
 
                     if (isEditing(user)) {
+
                         Button save = new Button(new Icon(VaadinIcon.CHECK));
                         save.addClassName("inline-action");
+                        rowButtons.get(user).add(save);
                         save.addClickListener(e -> {
                             grid.getEditor().save();
                             save(user);
@@ -90,17 +98,21 @@ public class UserListComponent extends AbstractCrudGrid<UserResponse> {
 
                         Button cancel = new Button(new Icon(VaadinIcon.CLOSE));
                         cancel.addClassName("inline-action");
+                        rowButtons.get(user).add(cancel);
                         cancel.addClickListener(e -> cancelEdit());
 
                         actions.add(save, cancel);
 
                     } else {
+
                         Button edit = new Button(new Icon(VaadinIcon.EDIT));
                         edit.addClassName("inline-action");
+                        rowButtons.get(user).add(edit);
                         edit.addClickListener(e -> startEdit(user));
 
                         Button delete = new Button(new Icon(VaadinIcon.TRASH));
                         delete.addClassName("inline-action");
+                        rowButtons.get(user).add(delete);
                         delete.addClickListener(e -> delete(user));
 
                         actions.add(edit, delete);
@@ -112,14 +124,20 @@ public class UserListComponent extends AbstractCrudGrid<UserResponse> {
                 .setHeader("")
                 .setAutoWidth(true)
                 .setFlexGrow(0)
-                .setClassNameGenerator(user -> "no-hover"); // 👈 MUY IMPORTANTE
-
+                .setClassNameGenerator(u -> "no-hover");
     }
+
 
     @Override
-    protected List<UserResponse> fetchAll() {
-        return usersService.findAll();
+    protected PageResponse<UserResponse> fetchPage(int apiPage, int pageSize) {
+        try {
+            return usersService.findPaged(apiPage, pageSize);
+        } catch (ApiClientException ex) {
+            showErrorNotification(ex.getMessage());
+            return new PageResponse<>(List.of(), 0, 0, pageSize, apiPage);
+        }
     }
+
 
     @Override
     protected UserResponse createEmpty() {
@@ -140,41 +158,51 @@ public class UserListComponent extends AbstractCrudGrid<UserResponse> {
             return;
         }
 
-        if (isCreating) {
+        try {
+            if (isCreating) {
 
-            // Pedimos la contraseña en el modal
-            openPasswordDialog(password -> {
+                openPasswordDialog(password -> {
+                    CreateUserRequest dto = new CreateUserRequest(
+                            username,
+                            password,
+                            role
+                    );
+                    usersService.create(dto);
 
-                CreateUserRequest dto = new CreateUserRequest(
+                    cancelEdit();
+                    goToPageOfNewElement();
+                });
+
+            } else {
+
+                UpdateUserRequest dto = new UpdateUserRequest(
                         username,
-                        password,
                         role
                 );
 
-                usersService.create(dto);
+                usersService.update(user.getId(), dto);
                 refresh();
                 cancelEdit();
-            });
 
-        } else {
+            }
 
-            // UPDATE normal
-            UpdateUserRequest dto = new UpdateUserRequest(
-                    username,
-                    role
-            );
-
-            usersService.update(user.getId(), dto);
+        } catch (ApiClientException ex) {
+            showErrorNotification(ex.getMessage());
             refresh();
             cancelEdit();
         }
     }
 
-
     @Override
     protected void delete(UserResponse user) {
-        usersService.delete(user.getId());
-        refresh();
+        try {
+            usersService.delete(user.getId());
+            adjustPageAfterDelete();
+        } catch (ApiClientException ex) {
+            showErrorNotification(ex.getMessage());
+            refresh();
+            cancelEdit();
+        }
     }
 
     private void openPasswordDialog(Consumer<String> onPasswordEntered) {
@@ -210,5 +238,4 @@ public class UserListComponent extends AbstractCrudGrid<UserResponse> {
         dialog.add(layout);
         dialog.open();
     }
-
 }

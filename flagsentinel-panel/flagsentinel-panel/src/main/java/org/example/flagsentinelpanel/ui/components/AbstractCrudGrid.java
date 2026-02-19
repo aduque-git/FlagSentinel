@@ -9,9 +9,14 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.example.flagsentinelpanel.config.AppPropertyKeys;
+import org.example.flagsentinelpanel.dto.PageResponse;
+import org.example.flagsentinelpanel.util.AppProperties;
+import org.example.flagsentinelpanel.util.SpringContext;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractCrudGrid<T> extends VerticalLayout {
 
@@ -19,57 +24,184 @@ public abstract class AbstractCrudGrid<T> extends VerticalLayout {
     protected T editingItem = null;
     protected T creatingItem = null;
 
-    protected int page = 0;
-    protected final int pageSize = 5;
+    // ============================
+    // PAGINACIÓN REAL
+    // ============================
+    protected int apiPage = 0;
+    protected int pageSize;
+
+    protected int totalElements = 0;
 
     Span title;
+
+    protected Button addButton;
+    protected Button prevButton;
+    protected Button nextButton;
+
+    protected final Map<Object, List<Button>> rowButtons = new HashMap<>();
 
     public AbstractCrudGrid(Class<T> clazz, Span title) {
         this.grid = new Grid<>(clazz, false);
         this.title = title;
     }
 
-    protected void init(){
-
+    protected void init() {
 
         setWidthFull();
         setPadding(true);
         setSpacing(true);
         setAlignItems(Alignment.CENTER);
 
+        pageSize = SpringContext.getBean(AppProperties.class)
+                .getInt(AppPropertyKeys.PAGINATION_API_PAGE_SIZE);
+
         grid.addClassName("abstract-grid");
         grid.setWidth("100%");
-
         grid.setAllRowsVisible(true);
-
         grid.getEditor().setBuffered(true);
+
+        grid.getEditor().addOpenListener(e -> disableAllButtonsExcept(e.getItem()));
+        grid.getEditor().addCloseListener(e -> enableAllButtons());
 
         configureColumns();
         add(buildHeader(), wrapGrid(), buildPagination());
-        refresh();
 
+        loadPage(); // CARGA INICIAL
+    }
+
+    // Métodos abstractos
+    protected abstract void configureColumns();
+    protected abstract PageResponse<T> fetchPage(int apiPage, int pageSize);
+    protected abstract void save(T item);
+    protected abstract void delete(T item);
+    protected abstract T createEmpty();
+
+
+    // ============================
+    // PAGINACIÓN REAL
+    // ============================
+
+    protected void loadPage() {
+        PageResponse<T> response = fetchPage(apiPage, pageSize);
+
+        totalElements = response.getTotalElements();
+        grid.setItems(response.getContent());
+
+        updateButtons();
+    }
+
+    protected void updateButtons() {
+        prevButton.setEnabled(apiPage > 0);
+
+        int maxPage = (int) Math.ceil((double) totalElements / pageSize) - 1;
+        nextButton.setEnabled(apiPage < maxPage);
+    }
+
+    // ============================
+    // AJUSTES PROFESIONALES
+    // ============================
+
+    protected void adjustPageAfterDelete() {
+
+        // 1. Cargar la página actual
+        PageResponse<T> response = fetchPage(apiPage, pageSize);
+
+        // 2. Si está vacía y no es la primera página → retroceder
+        if (response.getContent().isEmpty() && apiPage > 0) {
+            apiPage--;
+            response = fetchPage(apiPage, pageSize);
+        }
+
+        // 3. Actualizar totalElements y grid
+        totalElements = response.getTotalElements();
+        grid.setItems(response.getContent());
+
+        updateButtons();
     }
 
 
-    protected abstract void configureColumns();
+    protected void goToPageOfNewElement() {
+        int maxPage = (int) Math.ceil((double) totalElements / pageSize) - 1;
+        apiPage = maxPage;
+        loadPage();
+    }
 
-    protected abstract List<T> fetchAll();
+    // ============================
+    // BOTONES DE PAGINACIÓN
+    // ============================
 
-    protected abstract void save(T item);
+    private Component buildPagination() {
+        prevButton = new Button(new Icon(VaadinIcon.ANGLE_LEFT));
+        prevButton.addClassName("inline-action");
+        prevButton.addClickListener(e -> {
+            if (apiPage > 0) {
+                apiPage--;
+                loadPage();
+            }
+        });
 
-    protected abstract void delete(T item);
+        nextButton = new Button(new Icon(VaadinIcon.ANGLE_RIGHT));
+        nextButton.addClassName("inline-action");
+        nextButton.addClickListener(e -> {
+            apiPage++;
+            loadPage();
+        });
 
-    protected abstract T createEmpty();
+        HorizontalLayout layout = new HorizontalLayout(prevButton, nextButton);
+        layout.setSpacing(true);
+        layout.setAlignItems(Alignment.CENTER);
+        return layout;
+    }
+
+    // ============================
+    // CRUD
+    // ============================
+
+    protected void startCreate() {
+        creatingItem = createEmpty();
+        grid.setItems(List.of(creatingItem));
+        startEdit(creatingItem);
+    }
+
+    protected void startEdit(T item) {
+        editingItem = item;
+        grid.getEditor().editItem(item);
+    }
+
+    protected void cancelEdit() {
+
+        // 1. Cerrar editor
+        grid.getEditor().cancel();
+
+        // 2. Recargar SIEMPRE la página actual
+        loadPage();
+
+        // 3. Resetear estado
+        editingItem = null;
+        creatingItem = null;
+    }
+
+
+    protected boolean isEditing(T item) {
+        return editingItem == item || creatingItem == item;
+    }
+
+    protected void refresh() {
+        loadPage();
+    }
+
+    // ============================
+    // UI
+    // ============================
 
     protected Component buildHeader() {
 
-        // TÍTULO
         title.getStyle().set("color", "white");
         title.getStyle().set("font-weight", "bold");
-        title.getStyle().set("font-size", "1.3rem"); // un poco más grande
-        title.getStyle().set("margin-right", "auto"); // empuja el botón a la derecha
+        title.getStyle().set("font-size", "1.3rem");
+        title.getStyle().set("margin-right", "auto");
 
-        Button addButton = new Button(new Icon(VaadinIcon.PLUS));
+        addButton = new Button(new Icon(VaadinIcon.PLUS));
         addButton.addClassName("inline-action");
         addButton.getStyle().set("background", "#28a745");
         addButton.getStyle().set("color", "white");
@@ -90,76 +222,38 @@ public abstract class AbstractCrudGrid<T> extends VerticalLayout {
         return wrapper;
     }
 
-    private Component buildPagination() {
-        Button prev = new Button(new Icon(VaadinIcon.ANGLE_LEFT));
-        prev.addClassName("inline-action");
-        prev.addClickListener(e -> {
-            if (page > 0) {
-                page--;
-                refresh();
-            }
-        });
-
-        Button next = new Button(new Icon(VaadinIcon.ANGLE_RIGHT));
-        next.addClassName("inline-action");
-        next.addClickListener(e -> {
-            page++;
-            refresh();
-        });
-
-        HorizontalLayout layout = new HorizontalLayout(prev, next);
-        layout.setSpacing(true);
-        layout.setAlignItems(Alignment.CENTER);
-        return layout;
-    }
-
-    protected void startCreate() {
-        creatingItem = createEmpty();
-        List<T> items = new ArrayList<>(fetchAll());
-        items.add(0, creatingItem);
-        grid.setItems(items);
-        startEdit(creatingItem);
-    }
-
-    protected void startEdit(T item) {
-        editingItem = item;
-        grid.getEditor().editItem(item);
-    }
-
-    protected void cancelEdit() {
-        grid.getEditor().cancel();
-        if (creatingItem != null) {
-            refresh();
-        }
-        editingItem = null;
-        creatingItem = null;
-
-        grid.getDataProvider().refreshAll();
-    }
-
-    protected boolean isEditing(T item) {
-        return editingItem == item || creatingItem == item;
-    }
-
-    protected void refresh() {
-        List<T> all = fetchAll();
-        int from = page * pageSize;
-        int to = Math.min(from + pageSize, all.size());
-        if (from >= all.size()) {
-            page = 0;
-            from = 0;
-            to = Math.min(pageSize, all.size());
-        }
-        grid.setItems(all.subList(from, to));
-    }
-
     protected void showErrorNotification(String message) {
         Notification n = new Notification();
         n.setText(message);
-        n.setDuration(3000);
+        n.setDuration(2000);
         n.setPosition(Notification.Position.MIDDLE);
-        n.addClassName("app-notification");
+        n.addThemeName("app-notification");
         n.open();
+    }
+
+    // ============================
+    // BOTONES DE FILA
+    // ============================
+
+    protected void disableAllButtonsExcept(Object editingItem) {
+
+        if (addButton != null) addButton.setEnabled(false);
+        if (prevButton != null) prevButton.setEnabled(false);
+        if (nextButton != null) nextButton.setEnabled(false);
+
+        rowButtons.forEach((item, buttons) -> {
+            boolean isEditingRow = item.equals(editingItem);
+            buttons.forEach(b -> b.setEnabled(isEditingRow));
+        });
+    }
+
+    protected void enableAllButtons() {
+
+        if (addButton != null) addButton.setEnabled(true);
+        if (prevButton != null) prevButton.setEnabled(true);
+        if (nextButton != null) nextButton.setEnabled(true);
+
+        rowButtons.values().forEach(list -> list.forEach(b -> b.setEnabled(true)));
     }
 
     protected boolean isNullOrBlank(String s) {

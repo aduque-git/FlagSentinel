@@ -4,6 +4,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
+import org.example.flagsentinelpanel.ui.components.PaginationProperties;
 import org.example.flagsentinelpanel.ui.featureflags.components.FeatureFlagListComponent;
 import org.example.flagsentinelpanel.ui.featureflags.service.FeatureFlagsService;
 import org.example.flagsentinelpanel.ui.main.MainLayout;
@@ -17,7 +18,7 @@ public class FeatureFlagsView extends HorizontalLayout {
     private final FeatureFlagListComponent list;
 
     public FeatureFlagsView(FeatureFlagsService featureFlagsService,
-                            RulesService rulesService) {
+                            RulesService rulesService, PaginationProperties pagination) {
 
         setSizeFull();
         setPadding(true);
@@ -25,7 +26,7 @@ public class FeatureFlagsView extends HorizontalLayout {
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
-        list = new FeatureFlagListComponent(featureFlagsService, rulesService);
+        list = new FeatureFlagListComponent(featureFlagsService, rulesService, pagination);
 
         add(list);
     }
