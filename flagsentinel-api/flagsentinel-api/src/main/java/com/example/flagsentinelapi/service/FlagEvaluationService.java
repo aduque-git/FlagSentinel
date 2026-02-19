@@ -7,7 +7,7 @@ import com.example.flagsentinelapi.mapper.FeatureFlagMapper;
 import com.example.flagsentinelapi.mapper.FlagEvaluationMapper;
 import com.example.flagsentinelapi.model.FeatureFlag;
 import com.example.flagsentinelapi.repository.FeatureFlagRepository;
-import com.example.flagsentinelapi.rule.FlagEvaluator;
+import com.example.flagsentinelapi.util.FlagEvaluator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +26,28 @@ public class FlagEvaluationService {
         if (request.getKey() == null || request.getKey().isBlank()) {
             throw new BadRequestException("Flag key cannot be empty");
         }
-
+        System.out.println("PASO 1");
         // 1. Buscar flag
         FeatureFlag flag = flagRepo.findByFlagCode(request.getKey()).orElse(null);
 
+
+        System.out.println("PASO 2");
         if (flag == null) {
+
+            System.out.println("PASO 3");
             return mapper.toResponse(request.getKey(), false, "Flag not found");
         }
 
+
+        System.out.println("PASO 4");
         // 2. Evaluar reglas
         boolean enabled = flagEvaluator.isEnabledFor(
                 flagMapper.toDTO(flag),
                 request.getAttributes()
         );
+
+        System.out.println("PASO 5");
+
 
         return mapper.toResponse(
                 flag.getFlagCode(),
