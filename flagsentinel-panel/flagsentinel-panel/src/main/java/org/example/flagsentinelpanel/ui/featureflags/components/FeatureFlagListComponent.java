@@ -10,15 +10,17 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import org.example.flagsentinelpanel.dto.CreateFeatureFlagRequest;
-import org.example.flagsentinelpanel.dto.FeatureFlagResponse;
-import org.example.flagsentinelpanel.dto.RuleResponse;
-import org.example.flagsentinelpanel.dto.UpdateFeatureFlagRequest;
+import org.example.flagsentinelpanel.dto.*;
+import org.example.flagsentinelpanel.exceptions.ApiClientException;
 import org.example.flagsentinelpanel.ui.components.AbstractCrudGrid;
+import org.example.flagsentinelpanel.ui.components.PaginationProperties;
 import org.example.flagsentinelpanel.ui.featureflags.service.FeatureFlagsService;
 import org.example.flagsentinelpanel.ui.rules.service.RulesService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class FeatureFlagListComponent extends AbstractCrudGrid<FeatureFlagResponse> {
@@ -27,15 +29,20 @@ public class FeatureFlagListComponent extends AbstractCrudGrid<FeatureFlagRespon
     private final RulesService rulesService;
 
     private MultiSelectComboBox<RuleResponse> rulesField;
+    private final PaginationProperties pagination;
 
     public FeatureFlagListComponent(FeatureFlagsService featureFlagsService,
-                                    RulesService rulesService) {
+                                    RulesService rulesService,
+                                    PaginationProperties pagination) {
 
         super(FeatureFlagResponse.class, new Span("Feature Flags"));
 
         this.featureFlagsService = featureFlagsService;
         this.rulesService = rulesService;
+        this.pagination = pagination;
 
+        // IMPORTANTE: NO USAR DataProvider
+        // El AbstractCrudGrid ya controla la paginación híbrida
         init();
     }
 
@@ -68,15 +75,14 @@ public class FeatureFlagListComponent extends AbstractCrudGrid<FeatureFlagRespon
                 .setFlexGrow(0);
         colEnabled.setEditorComponent(enabledField);
 
-        // ========= RULES (COLUMNA ÚNICA) =========
+        // ========= RULES =========
         List<RuleResponse> allRules = rulesService.findAll();
 
         rulesField = new MultiSelectComboBox<>();
         rulesField.setItems(allRules);
-        rulesField.setItemLabelGenerator(RuleResponse::getValue);
+        rulesField.setItemLabelGenerator(RuleResponse::getAttribute);
         rulesField.addClassName("rules-multiselect");
 
-        // Cada vez que se abre el editor, sincronizamos el valor correctamente
         grid.getEditor().addOpenListener(event -> {
             FeatureFlagResponse item = event.getItem();
             if (item != null) {
@@ -84,7 +90,6 @@ public class FeatureFlagListComponent extends AbstractCrudGrid<FeatureFlagRespon
                     item.setRules(new ArrayList<>());
                 }
 
-                // 🔹 Mapear las reglas asignadas a los objetos exactos del ComboBox
                 Set<RuleResponse> toSelect = item.getRules().stream()
                         .map(r -> allRules.stream()
                                 .filter(a -> a.getId().equals(r.getId()))
@@ -93,23 +98,22 @@ public class FeatureFlagListComponent extends AbstractCrudGrid<FeatureFlagRespon
                         .filter(Objects::nonNull)
                         .collect(Collectors.toSet());
 
-                rulesField.setValue(toSelect); // ahora los checks aparecen correctamente
+                rulesField.setValue(toSelect);
             }
         });
 
-        // ValueChangeListener que actualiza directamente el item actual
         rulesField.addValueChangeListener(event -> {
             FeatureFlagResponse item = grid.getEditor().getItem();
             if (item != null) {
-                // Reemplazamos la lista con la selección actual; lista vacía si nada seleccionado
-                item.setRules(event.getValue() != null ? new ArrayList<>(event.getValue()) : new ArrayList<>());
+                item.setRules(event.getValue() != null
+                        ? new ArrayList<>(event.getValue())
+                        : new ArrayList<>());
             }
         });
 
-        // Columna única de Rules, sirve para mostrar y editar
         Grid.Column<FeatureFlagResponse> rulesColumn = grid.addColumn(flag ->
                         flag.getRules().stream()
-                                .map(RuleResponse::getValue)
+                                .map(RuleResponse::getAttribute)
                                 .collect(Collectors.joining(", "))
                 )
                 .setHeader("Rules")
@@ -123,10 +127,13 @@ public class FeatureFlagListComponent extends AbstractCrudGrid<FeatureFlagRespon
                     HorizontalLayout actions = new HorizontalLayout();
                     actions.addClassName("no-hover");
 
+                    rowButtons.computeIfAbsent(flag, k -> new ArrayList<>());
+
                     if (isEditing(flag)) {
 
                         Button save = new Button(new Icon(VaadinIcon.CHECK));
                         save.addClassName("inline-action");
+                        rowButtons.get(flag).add(save);
                         save.addClickListener(e -> {
                             grid.getEditor().save();
                             save(flag);
@@ -134,6 +141,7 @@ public class FeatureFlagListComponent extends AbstractCrudGrid<FeatureFlagRespon
 
                         Button cancel = new Button(new Icon(VaadinIcon.CLOSE));
                         cancel.addClassName("inline-action");
+                        rowButtons.get(flag).add(cancel);
                         cancel.addClickListener(e -> cancelEdit());
 
                         actions.add(save, cancel);
@@ -142,10 +150,12 @@ public class FeatureFlagListComponent extends AbstractCrudGrid<FeatureFlagRespon
 
                         Button edit = new Button(new Icon(VaadinIcon.EDIT));
                         edit.addClassName("inline-action");
+                        rowButtons.get(flag).add(edit);
                         edit.addClickListener(e -> startEdit(flag));
 
                         Button delete = new Button(new Icon(VaadinIcon.TRASH));
                         delete.addClassName("inline-action");
+                        rowButtons.get(flag).add(delete);
                         delete.addClickListener(e -> delete(flag));
 
                         actions.add(edit, delete);
@@ -161,16 +171,15 @@ public class FeatureFlagListComponent extends AbstractCrudGrid<FeatureFlagRespon
     }
 
     @Override
-    protected List<FeatureFlagResponse> fetchAll() {
-        // 🔹 Aseguramos que cada item tenga lista de reglas no nula
-        List<FeatureFlagResponse> flags = featureFlagsService.findAll();
-        flags.forEach(f -> {
-            if (f.getRules() == null) {
-                f.setRules(new ArrayList<>());
-            }
-        });
-        return flags;
+    protected PageResponse<FeatureFlagResponse> fetchPage(int apiPage, int pageSize) {
+        try {
+            return featureFlagsService.findPaged(apiPage, pageSize);
+        } catch (ApiClientException ex) {
+            showErrorNotification(ex.getMessage());
+            return new PageResponse<>(List.of(), 0, 0, pageSize, apiPage);
+        }
     }
+
 
     @Override
     protected FeatureFlagResponse createEmpty() {
@@ -188,34 +197,50 @@ public class FeatureFlagListComponent extends AbstractCrudGrid<FeatureFlagRespon
             return;
         }
 
-        // 🔹 Actualizamos las reglas del item desde el MultiSelectComboBox
         flag.setRules(new ArrayList<>(rulesField.getSelectedItems()));
 
         List<Long> ruleIds = flag.getRules().stream()
                 .map(RuleResponse::getId)
-                .collect(Collectors.toList());
+                .toList();
 
-        if (isCreating) {
-            featureFlagsService.create(new CreateFeatureFlagRequest(
-                    flag.getFlagCode(),
-                    flag.isEnabled(),
-                    ruleIds
-            ));
-        } else {
-            featureFlagsService.update(flag.getId(), new UpdateFeatureFlagRequest(
-                    flag.getFlagCode(),
-                    flag.isEnabled(),
-                    ruleIds
-            ));
+        try {
+            if (isCreating) {
+                featureFlagsService.create(new CreateFeatureFlagRequest(
+                        flag.getFlagCode(),
+                        flag.isEnabled(),
+                        ruleIds
+                ));
+
+                cancelEdit();
+                goToPageOfNewElement();
+                return;
+
+            } else {
+                featureFlagsService.update(flag.getId(), new UpdateFeatureFlagRequest(
+                        flag.getFlagCode(),
+                        flag.isEnabled(),
+                        ruleIds
+                ));
+            }
+
+            cancelEdit();
+            refresh();
+
+        } catch (ApiClientException ex) {
+            showErrorNotification(ex.getMessage());
+            cancelEdit();
+            refresh();
         }
-
-        cancelEdit(); // cerramos editor
-        refresh();    // refrescamos grid para mostrar botones edit/delete
     }
 
     @Override
     protected void delete(FeatureFlagResponse flag) {
-        featureFlagsService.delete(flag.getId());
-        refresh();
+        try {
+            featureFlagsService.delete(flag.getId());
+            adjustPageAfterDelete();
+        } catch (ApiClientException ex) {
+            showErrorNotification(ex.getMessage());
+            refresh();
+        }
     }
 }

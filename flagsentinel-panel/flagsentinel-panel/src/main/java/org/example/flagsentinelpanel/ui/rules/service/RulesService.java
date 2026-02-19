@@ -1,9 +1,10 @@
 package org.example.flagsentinelpanel.ui.rules.service;
 
 import org.example.flagsentinelpanel.dto.CreateRuleRequest;
-import org.example.flagsentinelpanel.dto.RuleDTO;
+import org.example.flagsentinelpanel.dto.PageResponse;
 import org.example.flagsentinelpanel.dto.RuleResponse;
 import org.example.flagsentinelpanel.dto.UpdateRuleRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,5 +33,7 @@ public class RulesService {
     public void delete(Long id) {
         client.deleteRule(id);
     }
+
+    public PageResponse<RuleResponse> findPaged(int page, int size) {return client.findPaged(page, size); }
 }
 

@@ -287,39 +287,17 @@ vaadin-multi-select-combo-box-item::part(checkmark) {
 /* ============================
    DIALOG PASSWORD
 ============================ */
-:host([theme~="password-dialog"]) [part="overlay"] {
+vaadin-dialog-overlay::part(overlay) {
     background: rgba(28, 30, 50, 0.95);
     border: 1px solid rgba(128, 0, 255, 0.8);
     border-radius: 16px;
     box-shadow: 0 0 24px rgba(128, 0, 255, 0.25);
 }
 
-:host([theme~="password-dialog"]) [part="content"] {
+vaadin-dialog-overlay::part(content) {
     background: transparent;
     color: #FFFFFF;
 }
-
-/* ============================
-   NOTIFICACIONES
-============================ */
-:host(.app-notification) [part="content"] {
-    background: rgba(28, 30, 50, 0.95);
-    color: #FFFFFF;
-    border: 1px solid rgba(128, 0, 255, 0.8);
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(128, 0, 255, 0.25);
-    padding: 14px 20px;
-}
-
-:host(.notification-field) [part="input-field"] {
-    background: rgba(28, 30, 50, 0.95);
-    color: #FFFFFF;
-    border: 1px solid rgba(128, 0, 255, 0.8);
-    border-radius: 10px;
-    padding: 6px 12px;
-}
-
-
 
 /* ============================
    LOGIN FORM

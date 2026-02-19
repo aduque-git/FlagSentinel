@@ -1,6 +1,5 @@
 package org.example.flagsentinelpanel.service;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinSession;
 import org.example.flagsentinelpanel.ui.login.service.AuthService;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,4 @@ public class SecurityService {
         return (String) VaadinSession.getCurrent().getAttribute("token");
     }
 
-    public void handleSuccessfulLogin() {
-        UI.getCurrent().navigate("main");
-    }
 }
