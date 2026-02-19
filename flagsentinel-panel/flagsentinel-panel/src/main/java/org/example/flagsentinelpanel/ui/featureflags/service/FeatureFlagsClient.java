@@ -1,11 +1,13 @@
 package org.example.flagsentinelpanel.ui.featureflags.service;
 
-import org.example.flagsentinelpanel.dto.CreateFeatureFlagRequest;
-import org.example.flagsentinelpanel.dto.FeatureFlagResponse;
-import org.example.flagsentinelpanel.dto.UpdateFeatureFlagRequest;
+import org.example.flagsentinelpanel.config.AppPropertyKeys;
+import org.example.flagsentinelpanel.dto.*;
+import org.example.flagsentinelpanel.service.BaseApiClient;
 import org.example.flagsentinelpanel.service.SecurityService;
+import org.example.flagsentinelpanel.util.AppProperties;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,81 +15,62 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class FeatureFlagsClient {
-
-    private final RestTemplate restTemplate;
-    private final SecurityService securityService;
-    private final String baseUrl;
+public class FeatureFlagsClient extends BaseApiClient {
 
     public FeatureFlagsClient(RestTemplate restTemplate,
                               SecurityService securityService,
-                              @Value("${api.base-url}") String baseUrl) {
-        this.restTemplate = restTemplate;
-        this.securityService = securityService;
-        this.baseUrl = baseUrl;
-    }
-
-    private HttpHeaders buildHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        String token = securityService.getToken();
-        if (token != null && !token.isBlank()) {
-            headers.set("Authorization", "Bearer " + token);
-        }
-
-        return headers;
+                              AppProperties properties) {
+        super(restTemplate, securityService, properties.get(AppPropertyKeys.BASE_URL));
     }
 
     public List<FeatureFlagResponse> getAll() {
-        HttpEntity<Void> entity = new HttpEntity<>(buildHeaders());
-
-        ResponseEntity<FeatureFlagResponse[]> response = restTemplate.exchange(
+        FeatureFlagResponse[] arr = exchange(
                 baseUrl + "/flags",
                 HttpMethod.GET,
-                entity,
+                null,
                 FeatureFlagResponse[].class
         );
-
-        return Arrays.asList(response.getBody());
+        return Arrays.asList(arr);
     }
 
     public FeatureFlagResponse create(CreateFeatureFlagRequest body) {
-        HttpEntity<CreateFeatureFlagRequest> entity = new HttpEntity<>(body, buildHeaders());
-
-        ResponseEntity<FeatureFlagResponse> response = restTemplate.exchange(
+        return exchange(
                 baseUrl + "/flags",
                 HttpMethod.POST,
-                entity,
+                body,
                 FeatureFlagResponse.class
         );
-
-        return response.getBody();
     }
 
     public FeatureFlagResponse update(Long id, UpdateFeatureFlagRequest body) {
-        HttpEntity<UpdateFeatureFlagRequest> entity = new HttpEntity<>(body, buildHeaders());
-
-        ResponseEntity<FeatureFlagResponse> response = restTemplate.exchange(
+        return exchange(
                 baseUrl + "/flags/{id}",
                 HttpMethod.PUT,
-                entity,
+                body,
                 FeatureFlagResponse.class,
                 id
         );
-
-        return response.getBody();
     }
 
     public void delete(Long id) {
-        HttpEntity<Void> entity = new HttpEntity<>(buildHeaders());
-
-        restTemplate.exchange(
+        exchange(
                 baseUrl + "/flags/{id}",
                 HttpMethod.DELETE,
-                entity,
+                null,
                 Void.class,
                 id
+        );
+    }
+
+    public PageResponse<FeatureFlagResponse> findPaged(int page, int size) {
+        String url = baseUrl + "/flags/paged?page=" + page + "&size=" + size;
+
+        return exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                }
         );
     }
 }

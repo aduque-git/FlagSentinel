@@ -4,8 +4,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
+import org.example.flagsentinelpanel.ui.components.PaginationProperties;
 import org.example.flagsentinelpanel.ui.main.MainLayout;
 import org.example.flagsentinelpanel.ui.rules.components.RulesListComponent;
+import org.example.flagsentinelpanel.ui.rules.service.OperatorService;
 import org.example.flagsentinelpanel.ui.rules.service.RulesService;
 
 @PermitAll
@@ -15,7 +17,7 @@ public class RulesView extends HorizontalLayout {
 
     private final RulesListComponent list;
 
-    public RulesView(RulesService rulesService) {
+    public RulesView(RulesService rulesService, OperatorService operatorService, PaginationProperties paginationProperties) {
 
         setSizeFull();
         setPadding(true);
@@ -23,7 +25,7 @@ public class RulesView extends HorizontalLayout {
         setAlignItems(Alignment.CENTER); // centra horizontalmente
         setJustifyContentMode(JustifyContentMode.CENTER); // o CENTER si quieres centrar verticalmente
 
-        list = new RulesListComponent(rulesService);
+        list = new RulesListComponent(rulesService, operatorService, paginationProperties);
 
         add(list);
     }

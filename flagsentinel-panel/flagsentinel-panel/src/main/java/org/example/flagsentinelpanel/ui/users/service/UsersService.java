@@ -1,8 +1,6 @@
 package org.example.flagsentinelpanel.ui.users.service;
 
-import org.example.flagsentinelpanel.dto.CreateUserRequest;
-import org.example.flagsentinelpanel.dto.UpdateUserRequest;
-import org.example.flagsentinelpanel.dto.UserResponse;
+import org.example.flagsentinelpanel.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,4 +29,6 @@ public class UsersService {
     public void delete(Long id) {
         client.deleteUser(id);
     }
+
+    public PageResponse<UserResponse> findPaged(int page, int size) {return client.findPaged(page, size); }
 }
