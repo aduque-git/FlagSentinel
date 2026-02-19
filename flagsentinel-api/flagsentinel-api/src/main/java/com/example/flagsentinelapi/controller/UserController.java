@@ -1,9 +1,12 @@
 package com.example.flagsentinelapi.controller;
 
 import com.example.flagsentinelapi.dto.CreateUserRequest;
+import com.example.flagsentinelapi.dto.RuleResponse;
 import com.example.flagsentinelapi.dto.UpdateUserRequest;
 import com.example.flagsentinelapi.dto.UserResponse;
 import com.example.flagsentinelapi.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +46,11 @@ public class UserController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/paged")
+    public Page<UserResponse> getPaged(Pageable pageable) {
+        return service.findAllPaged(pageable);
     }
 
 }

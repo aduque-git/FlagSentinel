@@ -1,4 +1,4 @@
-package com.example.flagsentinelapi.config;
+package com.example.flagsentinelapi.util;
 
 import com.example.flagsentinelapi.model.FeatureFlag;
 import com.example.flagsentinelapi.model.Rule;

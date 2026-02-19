@@ -3,6 +3,8 @@ package com.example.flagsentinelapi.exception;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -109,4 +111,37 @@ public class GlobalExceptionHandler {
 
         return "Database integrity error";
     }
+
+    // 401 - Token inválido o no enviado
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuth(AuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ErrorResponse("UNAUTHORIZED", "Authentication required or invalid token", Instant.now())
+        );
+    }
+
+    // 403 - Usuario autenticado pero sin permisos
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ErrorResponse("FORBIDDEN", "You do not have permission to perform this action", Instant.now())
+        );
+    }
+
+    // JWT expirado
+    @ExceptionHandler(io.jsonwebtoken.ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleExpiredJwt(io.jsonwebtoken.ExpiredJwtException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ErrorResponse("TOKEN_EXPIRED", "Your session has expired", Instant.now())
+        );
+    }
+
+    // JWT inválido
+    @ExceptionHandler(io.jsonwebtoken.SignatureException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidJwt(io.jsonwebtoken.SignatureException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ErrorResponse("INVALID_TOKEN", "Invalid authentication token", Instant.now())
+        );
+    }
+
 }

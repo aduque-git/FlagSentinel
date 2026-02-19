@@ -3,6 +3,7 @@ package com.example.flagsentinelapi.service;
 import com.example.flagsentinelapi.dto.CreateFeatureFlagRequest;
 import com.example.flagsentinelapi.dto.FeatureFlagResponse;
 import com.example.flagsentinelapi.dto.UpdateFeatureFlagRequest;
+import com.example.flagsentinelapi.dto.UserResponse;
 import com.example.flagsentinelapi.exception.ConflictException;
 import com.example.flagsentinelapi.exception.NotFoundException;
 import com.example.flagsentinelapi.mapper.FeatureFlagMapper;
@@ -12,6 +13,8 @@ import com.example.flagsentinelapi.repository.FeatureFlagRepository;
 import com.example.flagsentinelapi.repository.RuleRepository;
 import com.example.flagsentinelapi.websocket.WebSocketEventPublisher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -123,5 +126,10 @@ public class FeatureFlagService {
         }
 
         return rules;
+    }
+
+    public Page<FeatureFlagResponse> findAllPaged(Pageable pageable) {
+        return repo.findAll(pageable)
+                .map(mapper::toResponse);
     }
 }
