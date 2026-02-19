@@ -1,12 +1,7 @@
-package com.example.flagsentinelapi.rule;
+package com.example.flagsentinelapi.util;
 
 import com.example.flagsentinelapi.dto.FeatureFlagDTO;
 import com.example.flagsentinelapi.dto.RuleDTO;
-import com.example.flagsentinelapi.mapper.FeatureFlagMapper;
-import com.example.flagsentinelapi.model.FeatureFlag;
-import com.example.flagsentinelapi.model.Rule;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +20,9 @@ public class FlagEvaluator {
             return false;
         }
         List<RuleDTO> rules = flag.getRules();
+        for(RuleDTO rule: rules){
+            System.out.println("REGLA: " + rule.getAttribute());
+        }
         // Sin reglas -> habilitado para todos
         if (rules == null || rules.isEmpty()) {
             return true;

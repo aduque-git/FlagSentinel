@@ -8,6 +8,8 @@ import com.example.flagsentinelapi.model.Rule;
 import com.example.flagsentinelapi.service.RuleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +49,11 @@ public class RuleController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/paged")
+    public Page<RuleResponse> getPaged(Pageable pageable) {
+        return service.findAllPaged(pageable);
+    }
+
 
 }

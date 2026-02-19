@@ -83,6 +83,35 @@ paths:
                 items:
                   $ref: '#/components/schemas/FeatureFlagResponse'
 
+  /api/flags/paged:
+    get:
+      tags: [ Feature Flags ]
+      summary: Obtener feature flags paginados
+      description: Devuelve una página de feature flags según los parámetros de paginación.
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Página de feature flags
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageFeatureFlagResponse'
+
+
   /api/flags/{id}:
     get:
       tags: [ Feature Flags ]
@@ -206,6 +235,35 @@ paths:
                 items:
                   $ref: '#/components/schemas/RuleResponse'
 
+  /api/rules/paged:
+    get:
+      tags: [ Rules ]
+      summary: Obtener reglas paginadas
+      description: Devuelve una página de reglas según los parámetros de paginación.
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Página de reglas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageRuleResponse'
+
+
   /api/rules/{id}:
     get:
       tags: [ Rules ]
@@ -265,6 +323,27 @@ paths:
       responses:
         '204':
           description: Eliminado correctamente
+
+  ############################################
+  # RULE OPERATORS (dinámicos)
+  ############################################
+  /api/rules/operators:
+    get:
+      tags: [ Rules ]
+      summary: Obtener lista de operadores disponibles
+      description: Devuelve todos los operadores de reglas soportados por la API.
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Lista de operadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RuleOperatorDTO'
+
 
   ############################################
   # USERS CRUD
@@ -531,3 +610,47 @@ components:
           type: string
         role:
           type: string
+
+    RuleOperatorDTO:
+      type: object
+      properties:
+        code:
+          type: string
+          example: equals
+        label:
+          type: string
+          example: Equals
+
+    PageRuleResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleResponse'
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        size:
+          type: integer
+        number:
+          type: integer
+
+    PageFeatureFlagResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureFlagResponse'
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        size:
+          type: integer
+        number:
+          type: integer
+
+
