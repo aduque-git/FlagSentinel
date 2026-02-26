@@ -1,8 +1,9 @@
 package com.example.flagsentinelapi.service;
 
-import com.example.flagsentinelapi.dto.CreateRuleRequest;
-import com.example.flagsentinelapi.dto.RuleResponse;
-import com.example.flagsentinelapi.dto.UpdateRuleRequest;
+import com.example.flagsentinelapi.dto.bootstrap.BootstrapRuleResponse;
+import com.example.flagsentinelapi.dto.rule.CreateRuleRequest;
+import com.example.flagsentinelapi.dto.rule.RuleResponse;
+import com.example.flagsentinelapi.dto.rule.UpdateRuleRequest;
 import com.example.flagsentinelapi.exception.NotFoundException;
 import com.example.flagsentinelapi.mapper.RuleMapper;
 import com.example.flagsentinelapi.model.Rule;
@@ -32,7 +33,7 @@ public class RuleService {
         Rule saved = repo.save(rule);
 
         RuleResponse response = mapper.toResponse(saved);
-        ws.publishRuleUpdate(response);
+        ws.publishRuleUpdate(mapper.toBootstrapDto(saved));
 
         return response;
     }
@@ -50,7 +51,8 @@ public class RuleService {
         Rule saved = repo.save(rule);
         RuleResponse response = mapper.toResponse(saved);
 
-        ws.publishRuleUpdate(response);
+
+        ws.publishRuleUpdate(mapper.toBootstrapDto(saved));
         return response;
     }
 
@@ -75,6 +77,15 @@ public class RuleService {
     }
 
     // ---------------------------------------------------------
+    // GET ALL
+    // ---------------------------------------------------------
+    public List<BootstrapRuleResponse> getAllBootstrap() {
+        return repo.findAll().stream()
+                .map(mapper::toBootstrapDto)
+                .toList();
+    }
+
+    // ---------------------------------------------------------
     // DELETE
     // ---------------------------------------------------------
     public void delete(Long id) {
@@ -84,7 +95,7 @@ public class RuleService {
 
         repo.delete(rule);
 
-        ws.publishRuleUpdate("deleted:" + id);
+        ws.publishRuleUpdate("Rule_deleted:" + id);
     }
 
     public Page<RuleResponse> findAllPaged(Pageable pageable) {

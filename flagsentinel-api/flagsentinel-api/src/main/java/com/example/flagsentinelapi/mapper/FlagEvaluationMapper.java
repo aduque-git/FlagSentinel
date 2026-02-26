@@ -1,8 +1,6 @@
 package com.example.flagsentinelapi.mapper;
 
-import com.example.flagsentinelapi.dto.FeatureFlagDTO;
-import com.example.flagsentinelapi.dto.FlagEvaluationResponse;
-import com.example.flagsentinelapi.model.FeatureFlag;
+import com.example.flagsentinelapi.dto.flagevaluation.FlagEvaluationResponse;
 import org.springframework.stereotype.Component;
 
 @Component

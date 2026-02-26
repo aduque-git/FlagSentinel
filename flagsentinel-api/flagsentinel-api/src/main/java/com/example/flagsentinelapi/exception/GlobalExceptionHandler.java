@@ -96,7 +96,7 @@ public class GlobalExceptionHandler {
             }
 
             if (msg.contains("rule_id")) {
-                return "Rule does not exist";
+                return "No se puede eliminar una regla asociada";
             }
 
             return "Referenced entity does not exist";

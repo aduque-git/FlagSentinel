@@ -1,12 +1,7 @@
 package org.example.flagsentinelpanel.util;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class AppProperties {

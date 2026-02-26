@@ -1,7 +1,12 @@
 package com.example.flagsentinelapi.mapper;
 
-import com.example.flagsentinelapi.dto.*;
+import com.example.flagsentinelapi.dto.bootstrap.BootstrapFeatureFlagDTO;
+import com.example.flagsentinelapi.dto.flag.CreateFeatureFlagRequest;
+import com.example.flagsentinelapi.dto.flag.FeatureFlagDTO;
+import com.example.flagsentinelapi.dto.flag.FeatureFlagResponse;
+import com.example.flagsentinelapi.dto.flag.UpdateFeatureFlagRequest;
 import com.example.flagsentinelapi.model.FeatureFlag;
+import com.example.flagsentinelapi.model.Rule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -55,5 +60,23 @@ public class FeatureFlagMapper {
 
         return dto;
     }
+
+    public BootstrapFeatureFlagDTO toBootstrapDTO(FeatureFlag entity) {
+        BootstrapFeatureFlagDTO dto = new BootstrapFeatureFlagDTO();
+        dto.setId(entity.getId());
+        dto.setFlagCode(entity.getFlagCode());
+        dto.setEnabled(entity.isEnabled());
+
+        if (entity.getRules() != null) {
+            dto.setRules(
+                    entity.getRules().stream()
+                            .map(Rule::getId)   // solo IDs
+                            .toList()
+            );
+        }
+
+        return dto;
+    }
+
 }
 

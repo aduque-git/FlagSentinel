@@ -1,8 +1,8 @@
 package com.example.flagsentinelapi.controller;
 
-import com.example.flagsentinelapi.dto.LoginRequest;
-import com.example.flagsentinelapi.dto.LoginResponse;
-import com.example.flagsentinelapi.security.JwtUtil;
+import com.example.flagsentinelapi.dto.login.LoginRequest;
+import com.example.flagsentinelapi.dto.login.LoginResponse;
+import com.example.flagsentinelapi.middleware.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
