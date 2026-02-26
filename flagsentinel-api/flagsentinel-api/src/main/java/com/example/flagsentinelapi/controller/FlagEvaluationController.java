@@ -1,7 +1,7 @@
 package com.example.flagsentinelapi.controller;
 
-import com.example.flagsentinelapi.dto.FlagEvaluationRequest;
-import com.example.flagsentinelapi.dto.FlagEvaluationResponse;
+import com.example.flagsentinelapi.dto.flagevaluation.FlagEvaluationRequest;
+import com.example.flagsentinelapi.dto.flagevaluation.FlagEvaluationResponse;
 import com.example.flagsentinelapi.service.FlagEvaluationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

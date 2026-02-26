@@ -1,9 +1,9 @@
 package com.example.flagsentinelapi.mapper;
 
-import com.example.flagsentinelapi.dto.CreateUserRequest;
-import com.example.flagsentinelapi.dto.UpdateUserRequest;
-import com.example.flagsentinelapi.dto.UserResponse;
-import com.example.flagsentinelapi.dto.Role;
+import com.example.flagsentinelapi.dto.user.CreateUserRequest;
+import com.example.flagsentinelapi.dto.user.UpdateUserRequest;
+import com.example.flagsentinelapi.dto.user.UserResponse;
+import com.example.flagsentinelapi.dto.user.Role;
 import com.example.flagsentinelapi.model.User;
 import org.springframework.stereotype.Component;
 

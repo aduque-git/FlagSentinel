@@ -367,3 +367,58 @@ vaadin-login-form::part(form-login-button) {
 vaadin-login-form::part(form-login-button):hover {
     background: rgba(128, 0, 255, 1);
 }
+
+/* ============================
+   COMBOBOX (ARREGLO DEFINITIVO)
+============================ */
+
+/* Caja del input */
+vaadin-combo-box::part(text-field) {
+    background: rgba(28, 30, 50, 0.95) !important;
+    border: 1px solid rgba(128, 0, 255, 0.8) !important;
+    border-radius: 6px !important;
+    color: #FFFFFF !important;
+}
+
+/* Input interno */
+vaadin-combo-box input {
+    color: #FFFFFF !important;
+    caret-color: #FFFFFF !important;
+}
+
+/* Placeholder */
+vaadin-combo-box input::placeholder {
+    color: #CCCCCC !important;
+}
+
+/* Flecha del combo */
+vaadin-combo-box::part(toggle-button) {
+    color: #FFFFFF !important;
+}
+
+/* Overlay del dropdown */
+vaadin-combo-box-overlay::part(overlay) {
+    background: rgba(28, 30, 50, 0.95) !important;
+    border: 1px solid rgba(128, 0, 255, 0.8) !important;
+    border-radius: 6px !important;
+}
+
+/* Items del dropdown */
+vaadin-combo-box-item::part(content) {
+    background: rgba(28, 30, 50, 0.95) !important;
+    color: #FFFFFF !important;
+    padding: 6px 12px !important;
+}
+
+/* Hover de items */
+vaadin-combo-box-item:hover::part(content) {
+    background: rgba(0, 255, 209, 0.15) !important;
+}
+
+/* Item seleccionado */
+vaadin-combo-box-item[selected]::part(content) {
+    background: rgba(0, 255, 209, 0.25) !important;
+    color: #00FFD1 !important;
+    font-weight: 600;
+}
+

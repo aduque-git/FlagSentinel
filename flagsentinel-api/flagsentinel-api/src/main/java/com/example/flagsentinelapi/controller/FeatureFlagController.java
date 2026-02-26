@@ -1,21 +1,15 @@
 package com.example.flagsentinelapi.controller;
 
-import com.example.flagsentinelapi.dto.CreateFeatureFlagRequest;
-import com.example.flagsentinelapi.dto.FeatureFlagResponse;
-import com.example.flagsentinelapi.dto.UpdateFeatureFlagRequest;
-import com.example.flagsentinelapi.dto.UserResponse;
-import com.example.flagsentinelapi.mapper.FeatureFlagMapper;
-import com.example.flagsentinelapi.model.FeatureFlag;
+import com.example.flagsentinelapi.dto.flag.CreateFeatureFlagRequest;
+import com.example.flagsentinelapi.dto.flag.FeatureFlagResponse;
+import com.example.flagsentinelapi.dto.flag.UpdateFeatureFlagRequest;
 import com.example.flagsentinelapi.service.FeatureFlagService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

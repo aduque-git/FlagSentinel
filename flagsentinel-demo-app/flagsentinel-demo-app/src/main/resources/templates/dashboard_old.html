@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Flag Sentinel Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+          darkMode: 'class',
+          theme: {
+            extend: {
+              colors: {
+                panel: "#0f172a",
+                border: "#1e293b",
+                accent: "#6366f1"
+              }
+            }
+          }
+        }
+    </script>
+
+    <style>
+        body{
+          background:
+            radial-gradient(circle at 20% 10%, #1e1b4b, transparent 40%),
+            radial-gradient(circle at 80% 30%, #020617, transparent 40%),
+            #020617;
+        }
+
+        tbody tr{
+          transition:.2s;
+        }
+        tbody tr:hover{
+          background: rgba(99,102,241,.15);
+        }
+        .selected{
+          background: rgba(99,102,241,.25);
+          box-shadow: inset 0 0 0 1px rgba(99,102,241,.6);
+        }
+    </style>
+</head>
+
+<body class="text-gray-200 min-h-screen flex flex-col">
+
+<header class="bg-black/40 backdrop-blur border-b border-border px-6 py-4 flex items-center gap-3">
+    <span id="ws-status" class="w-3 h-3 rounded-full bg-red-600 animate-pulse"></span>
+    <h1 class="text-xl font-semibold tracking-wide">Flag Sentinel Dashboard</h1>
+</header>
+
+<div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- TABLES -->
+    <div class="flex gap-6 p-6 overflow-hidden">
+
+        <!-- FLAGS -->
+        <div class="flex-1 bg-panel border border-border rounded-xl p-5 flex flex-col">
+
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="font-semibold">Feature Flags</h2>
+
+                <!-- PRO RESET BUTTON -->
+                <button id="flags-reset"
+                        title="Reset selección"
+                        class="p-2 rounded-md border border-border hover:border-accent hover:text-accent transition">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                              d="M4 4v6h6M20 20v-6h-6M5 19a9 9 0 1114-14"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto h-[340px]">
+                <table class="w-full text-sm">
+                    <thead class="sticky top-0 bg-panel border-b border-border text-gray-400">
+                    <tr>
+                        <th class="py-2 text-left">Flag</th>
+                        <th class="py-2 text-center">Enabled</th>
+                    </tr>
+                    </thead>
+                    <tbody id="flags-body"></tbody>
+                </table>
+            </div>
+
+            <div class="mt-3 flex justify-between text-xs">
+                <button id="flags-prev" class="px-3 py-1 border border-border rounded">←</button>
+                <span id="flags-page-info"></span>
+                <button id="flags-next" class="px-3 py-1 border border-border rounded">→</button>
+            </div>
+        </div>
+
+        <!-- RULES -->
+        <div class="flex-1 bg-panel border border-border rounded-xl p-5 flex flex-col">
+
+            <h2 class="font-semibold mb-3">Rules</h2>
+
+            <div class="flex-1 overflow-y-auto h-[340px]">
+                <table class="w-full text-sm">
+                    <thead class="sticky top-0 bg-panel border-b border-border text-gray-400">
+                    <tr>
+                        <th class="text-left py-2">Attribute</th>
+                        <th class="text-center py-2">Operator</th>
+                        <th class="text-center py-2">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody id="rules-body" class="text-center"></tbody>
+                </table>
+            </div>
+
+            <div class="mt-3 flex justify-between text-xs">
+                <button id="rules-prev" class="px-3 py-1 border border-border rounded">←</button>
+                <span id="rules-page-info"></span>
+                <button id="rules-next" class="px-3 py-1 border border-border rounded">→</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EVENTS -->
+    <div class="flex-1 flex justify-end items-end px-6 pb-6">
+        <div class="w-[420px] h-[260px] bg-panel border border-border rounded-xl p-4 overflow-y-auto">
+            <h2 class="text-xs text-gray-400 mb-3 uppercase tracking-wider">Live Events</h2>
+            <div id="events" class="space-y-1 text-sm font-mono"></div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-xs text-gray-500 px-6 py-3 border-t border-border">
+    Flag Sentinel · Demo UI
+</footer>
+
+<script>
+    let allFlags=[],allRules=[];
+    let selectedRules=null,selectedCode=null;
+
+    const pageSize=5;
+    let flagsPage=1,rulesPage=1;
+
+    function renderFlags(){
+     const body=document.getElementById("flags-body");
+     body.innerHTML="";
+     const total=Math.max(1,Math.ceil(allFlags.length/pageSize));
+     if(flagsPage>total) flagsPage=total;
+
+     const items=allFlags.slice((flagsPage-1)*pageSize,flagsPage*pageSize);
+
+     items.forEach(f=>{
+      const tr=document.createElement("tr");
+      tr.className="border-b border-border cursor-pointer "+
+       (selectedCode===f.flagCode?"selected":"");
+
+      tr.innerHTML=`
+       <td class="py-2 text-left">${f.flagCode}</td>
+       <td class="text-center">${f.enabled?"✔":"✘"}</td>`;
+
+      tr.onclick=()=>{
+       selectedRules=f.rules||[];
+       selectedCode=f.flagCode;
+       rulesPage=1;
+       renderFlags();
+       renderRulesFiltered();
+      };
+
+      body.appendChild(tr);
+     });
+
+     document.getElementById("flags-page-info").textContent=`${flagsPage}/${total}`;
+    }
+
+    function renderRules(list){
+     const body=document.getElementById("rules-body");
+     body.innerHTML="";
+     const total=Math.max(1,Math.ceil(list.length/pageSize));
+     if(rulesPage>total) rulesPage=total;
+
+     const items=list.slice((rulesPage-1)*pageSize,rulesPage*pageSize);
+
+     items.forEach(r=>{
+      const tr=document.createElement("tr");
+      tr.className="border-b border-border";
+      tr.innerHTML=`
+       <td class="text-left py-2">${r.attribute}</td>
+       <td>${r.operator}</td>
+       <td>${r.value}</td>`;
+      body.appendChild(tr);
+     });
+
+     document.getElementById("rules-page-info").textContent=`${rulesPage}/${total}`;
+    }
+
+    function renderRulesFiltered(){
+     if(!selectedRules){renderRules(allRules);return;}
+     renderRules(allRules.filter(r=>selectedRules.includes(r.id)));
+    }
+
+    async function load(){
+     const s=await (await fetch("/dashboard/status")).json();
+     document.getElementById("ws-status").className=
+     "w-3 h-3 rounded-full "+(s.connected?"bg-green-500":"bg-red-600");
+
+     allFlags=await (await fetch("/dashboard/flags")).json();
+     allRules=await (await fetch("/dashboard/rules")).json();
+     renderFlags();
+     renderRulesFiltered();
+
+     const events=await (await fetch("/dashboard/events")).json();
+     const ev=document.getElementById("events");
+     ev.innerHTML="";
+     events.forEach(e=>{
+      ev.innerHTML+=`<div>[${new Date(e.timestamp).toLocaleTimeString()}] ${e.message}</div>`;
+     });
+     ev.scrollTop=ev.scrollHeight;
+    }
+
+    document.getElementById("flags-prev").onclick=()=>{if(flagsPage>1){flagsPage--;renderFlags();}};
+    document.getElementById("flags-next").onclick=()=>{flagsPage++;renderFlags();};
+    document.getElementById("rules-prev").onclick=()=>{if(rulesPage>1){rulesPage--;renderRulesFiltered();}};
+    document.getElementById("rules-next").onclick=()=>{rulesPage++;renderRulesFiltered();};
+
+    document.getElementById("flags-reset").onclick=()=>{
+     selectedRules=null;selectedCode=null;
+     flagsPage=1;rulesPage=1;
+     renderFlags();renderRules(allRules);
+    };
+
+    setInterval(load,20000);
+    load();
+</script>
+
+</body>
+</html>

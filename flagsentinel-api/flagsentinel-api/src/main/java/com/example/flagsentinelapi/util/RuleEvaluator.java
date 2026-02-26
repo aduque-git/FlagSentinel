@@ -1,8 +1,8 @@
 package com.example.flagsentinelapi.util;
 
 
-import com.example.flagsentinelapi.dto.RuleDTO;
-import com.example.flagsentinelapi.dto.RuleOperator;
+import com.example.flagsentinelapi.dto.rule.RuleDTO;
+import com.example.flagsentinelapi.dto.ruleoperator.RuleOperator;
 
 import java.util.Map;
 

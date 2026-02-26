@@ -58,13 +58,15 @@ public class RulesListComponent extends AbstractCrudGrid<RuleResponse> {
 
         // OPERATOR
         ComboBox<OperatorOption> operatorCombo = new ComboBox<>();
-        operatorCombo.setItems(operatorService.findAll());
+        List<OperatorOption> operators = operatorService.findAll();
+
+        operatorCombo.setItems(operators);
         operatorCombo.setItemLabelGenerator(OperatorOption::getLabel);
 
         binder.forField(operatorCombo)
                 .withConverter(
                         op -> op != null ? op.getCode() : null,
-                        code -> operatorService.findAll().stream()
+                        code -> operators.stream()
                                 .filter(o -> o.getCode().equals(code))
                                 .findFirst()
                                 .orElse(null)
@@ -72,7 +74,7 @@ public class RulesListComponent extends AbstractCrudGrid<RuleResponse> {
                 .bind(RuleResponse::getOperator, RuleResponse::setOperator);
 
         Grid.Column<RuleResponse> colOp = grid
-                .addColumn(rule -> operatorService.findAll().stream()
+                .addColumn(rule -> operators.stream()
                         .filter(o -> o.getCode().equals(rule.getOperator()))
                         .map(OperatorOption::getLabel)
                         .findFirst()
@@ -83,6 +85,7 @@ public class RulesListComponent extends AbstractCrudGrid<RuleResponse> {
                 .setFlexGrow(1);
 
         colOp.setEditorComponent(operatorCombo);
+
 
         // VALUE
         TextField valField = new TextField();
