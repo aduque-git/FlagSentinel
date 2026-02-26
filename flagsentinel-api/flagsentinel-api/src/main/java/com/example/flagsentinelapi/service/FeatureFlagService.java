@@ -1,9 +1,10 @@
 package com.example.flagsentinelapi.service;
 
-import com.example.flagsentinelapi.dto.CreateFeatureFlagRequest;
-import com.example.flagsentinelapi.dto.FeatureFlagResponse;
-import com.example.flagsentinelapi.dto.UpdateFeatureFlagRequest;
-import com.example.flagsentinelapi.dto.UserResponse;
+import com.example.flagsentinelapi.dto.bootstrap.BootstrapFeatureFlagDTO;
+import com.example.flagsentinelapi.dto.flag.CreateFeatureFlagRequest;
+import com.example.flagsentinelapi.dto.flag.FeatureFlagDTO;
+import com.example.flagsentinelapi.dto.flag.FeatureFlagResponse;
+import com.example.flagsentinelapi.dto.flag.UpdateFeatureFlagRequest;
 import com.example.flagsentinelapi.exception.ConflictException;
 import com.example.flagsentinelapi.exception.NotFoundException;
 import com.example.flagsentinelapi.mapper.FeatureFlagMapper;
@@ -48,7 +49,7 @@ public class FeatureFlagService {
         FeatureFlag saved = repo.save(flag);
         FeatureFlagResponse response = mapper.toResponse(saved);
 
-        ws.publishFlagUpdate(response);
+        ws.publishFlagUpdate(mapper.toBootstrapDTO(saved));
         return response;
     }
 
@@ -70,7 +71,7 @@ public class FeatureFlagService {
         FeatureFlag saved = repo.save(flag);
         FeatureFlagResponse response = mapper.toResponse(saved);
 
-        ws.publishFlagUpdate(response);
+        ws.publishFlagUpdate(mapper.toBootstrapDTO(saved));
         return response;
     }
 
@@ -95,6 +96,15 @@ public class FeatureFlagService {
     }
 
     // ---------------------------------------------------------
+    // GET ALL BOOTSTRAP
+    // ---------------------------------------------------------
+    public List<BootstrapFeatureFlagDTO> getAllBootstrap() {
+        return repo.findAll().stream()
+                .map(mapper::toBootstrapDTO)
+                .toList();
+    }
+
+    // ---------------------------------------------------------
     // DELETE
     // ---------------------------------------------------------
     public void delete(Long id) {
@@ -104,7 +114,7 @@ public class FeatureFlagService {
 
         repo.delete(flag);
 
-        ws.publishFlagUpdate("deleted:" + id);
+        ws.publishFlagUpdate("Flag_deleted:" + id);
     }
 
     // ---------------------------------------------------------

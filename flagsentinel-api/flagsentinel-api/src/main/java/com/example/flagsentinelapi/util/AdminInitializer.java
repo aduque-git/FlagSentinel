@@ -1,6 +1,6 @@
 package com.example.flagsentinelapi.util;
 
-import com.example.flagsentinelapi.dto.Role;
+import com.example.flagsentinelapi.dto.user.Role;
 import com.example.flagsentinelapi.model.User;
 import com.example.flagsentinelapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,6 +1,6 @@
 package com.example.flagsentinelapi.model;
 
-import com.example.flagsentinelapi.dto.Role;
+import com.example.flagsentinelapi.dto.user.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

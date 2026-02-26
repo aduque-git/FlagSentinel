@@ -1,20 +1,15 @@
 package com.example.flagsentinelapi.controller;
 
-import com.example.flagsentinelapi.dto.CreateRuleRequest;
-import com.example.flagsentinelapi.dto.RuleResponse;
-import com.example.flagsentinelapi.dto.UpdateRuleRequest;
-import com.example.flagsentinelapi.mapper.RuleMapper;
-import com.example.flagsentinelapi.model.Rule;
+import com.example.flagsentinelapi.dto.rule.CreateRuleRequest;
+import com.example.flagsentinelapi.dto.rule.RuleResponse;
+import com.example.flagsentinelapi.dto.rule.UpdateRuleRequest;
 import com.example.flagsentinelapi.service.RuleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

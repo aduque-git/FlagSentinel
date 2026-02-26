@@ -1,7 +1,7 @@
 package com.example.flagsentinelapi.service;
 
-import com.example.flagsentinelapi.dto.FlagEvaluationRequest;
-import com.example.flagsentinelapi.dto.FlagEvaluationResponse;
+import com.example.flagsentinelapi.dto.flagevaluation.FlagEvaluationRequest;
+import com.example.flagsentinelapi.dto.flagevaluation.FlagEvaluationResponse;
 import com.example.flagsentinelapi.exception.BadRequestException;
 import com.example.flagsentinelapi.mapper.FeatureFlagMapper;
 import com.example.flagsentinelapi.mapper.FlagEvaluationMapper;

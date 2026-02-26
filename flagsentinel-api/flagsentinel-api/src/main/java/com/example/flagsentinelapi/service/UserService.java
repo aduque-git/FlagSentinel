@@ -1,9 +1,8 @@
 package com.example.flagsentinelapi.service;
 
-import com.example.flagsentinelapi.dto.CreateUserRequest;
-import com.example.flagsentinelapi.dto.RuleResponse;
-import com.example.flagsentinelapi.dto.UpdateUserRequest;
-import com.example.flagsentinelapi.dto.UserResponse;
+import com.example.flagsentinelapi.dto.user.CreateUserRequest;
+import com.example.flagsentinelapi.dto.user.UpdateUserRequest;
+import com.example.flagsentinelapi.dto.user.UserResponse;
 import com.example.flagsentinelapi.exception.BadRequestException;
 import com.example.flagsentinelapi.exception.ConflictException;
 import com.example.flagsentinelapi.exception.NotFoundException;
