@@ -72,7 +72,8 @@ public enum RuleOperator {
                 return op;
             }
         }
-        throw new IllegalArgumentException("Unknown operator: " + code);
+
+        return null;
     }
 
     public static List<OperatorDTO> asDtoList() {

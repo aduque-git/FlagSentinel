@@ -5,6 +5,7 @@ import com.example.flagsentinelapi.dto.rule.CreateRuleRequest;
 import com.example.flagsentinelapi.dto.rule.RuleResponse;
 import com.example.flagsentinelapi.dto.rule.UpdateRuleRequest;
 import com.example.flagsentinelapi.exception.NotFoundException;
+import com.example.flagsentinelapi.logging.ApiLogMessages;
 import com.example.flagsentinelapi.mapper.RuleMapper;
 import com.example.flagsentinelapi.model.Rule;
 import com.example.flagsentinelapi.repository.RuleRepository;
@@ -29,107 +30,153 @@ public class RuleService {
     private final RuleMapper mapper;
     private final WebSocketEventPublisher ws;
 
-    // CREATE
     public RuleResponse create(CreateRuleRequest request) {
+
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_CREATE_REQUEST,
+                request.getAttribute(),
+                request.getOperator()
+        ));
 
         Rule rule = mapper.toEntity(request);
         Rule saved = repo.save(rule);
 
-        log.info("Rule created id={} attribute={} operator={}",
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_CREATE_SUCCESS,
                 saved.getId(),
                 saved.getAttribute(),
-                saved.getOperator());
+                saved.getOperator()
+        ));
 
         ws.publishRuleUpdate(mapper.toBootstrapDto(saved));
 
         return mapper.toResponse(saved);
     }
 
-    // UPDATE
     public RuleResponse update(Long id, UpdateRuleRequest request) {
+
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_UPDATE_REQUEST,
+                id
+        ));
 
         Rule rule = repo.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Rule not found id={}", id);
+                    log.warn(ApiLogMessages.get(
+                            LogPropertiesKeys.RULE_NOT_FOUND,
+                            id
+                    ));
                     return new NotFoundException("Rule not found");
                 });
 
         mapper.updateEntity(rule, request);
         Rule saved = repo.save(rule);
 
-        log.info("Rule updated id={} attribute={} operator={}",
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_UPDATE_SUCCESS,
                 saved.getId(),
                 saved.getAttribute(),
-                saved.getOperator());
+                saved.getOperator()
+        ));
 
         ws.publishRuleUpdate(mapper.toBootstrapDto(saved));
 
         return mapper.toResponse(saved);
     }
 
-    // GET BY ID
     public RuleResponse getById(Long id) {
+
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_GET_REQUEST,
+                id
+        ));
 
         Rule rule = repo.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Rule not found id={}", id);
+                    log.warn(ApiLogMessages.get(
+                            LogPropertiesKeys.RULE_NOT_FOUND,
+                            id
+                    ));
                     return new NotFoundException("Rule not found");
                 });
 
         return mapper.toResponse(rule);
     }
 
-    // GET ALL
     public List<RuleResponse> getAll() {
+
+        log.debug(ApiLogMessages.get(LogPropertiesKeys.RULE_GET_ALL_REQUEST));
 
         List<RuleResponse> list = repo.findAll().stream()
                 .map(mapper::toResponse)
                 .toList();
 
-        log.debug("Retrieved {} rules", list.size());
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_GET_ALL_SUCCESS,
+                list.size()
+        ));
 
         return list;
     }
 
-    // BOOTSTRAP
     public List<BootstrapRuleResponse> getAllBootstrap() {
+
+        log.debug(ApiLogMessages.get(LogPropertiesKeys.RULE_BOOTSTRAP_REQUEST));
 
         List<BootstrapRuleResponse> list = repo.findAll().stream()
                 .map(mapper::toBootstrapDto)
                 .toList();
 
-        log.debug("Retrieved {} bootstrap rules", list.size());
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_BOOTSTRAP_SUCCESS,
+                list.size()
+        ));
 
         return list;
     }
 
-    // DELETE
     public void delete(Long id) {
+
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_DELETE_REQUEST,
+                id
+        ));
 
         Rule rule = repo.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Rule not found id={}", id);
+                    log.warn(ApiLogMessages.get(
+                            LogPropertiesKeys.RULE_NOT_FOUND,
+                            id
+                    ));
                     return new NotFoundException("Rule not found");
                 });
 
         repo.delete(rule);
 
-        log.info("Rule deleted id={} attribute={}",
-                id, rule.getAttribute());
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_DELETE_SUCCESS,
+                id,
+                rule.getAttribute()
+        ));
 
         ws.publishRuleUpdate("Rule_deleted:" + id);
     }
 
-    // PAGINATION
     public Page<RuleResponse> findAllPaged(Pageable pageable) {
+
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_PAGE_REQUEST,
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        ));
 
         Page<RuleResponse> page = repo.findAll(pageable)
                 .map(mapper::toResponse);
 
-        log.debug("Rules page requested page={} size={} total={}",
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                page.getTotalElements());
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.RULE_PAGE_SUCCESS,
+                page.getTotalElements()
+        ));
 
         return page;
     }

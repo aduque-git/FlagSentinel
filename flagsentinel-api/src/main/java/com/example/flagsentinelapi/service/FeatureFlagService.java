@@ -37,22 +37,33 @@ public class FeatureFlagService {
     // ---------------- CREATE ----------------
     public FeatureFlagResponse create(CreateFeatureFlagRequest request) {
 
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_CREATE_REQUEST,
+                request.getFlagCode()
+        ));
+
         if (repo.findByFlagCode(request.getFlagCode()).isPresent()) {
-            log.warn("Attempt to create duplicate feature flag code={}", request.getFlagCode());
+            log.warn(ApiLogMessages.get(
+                    LogPropertiesKeys.FLAG_CREATE_DUPLICATE,
+                    request.getFlagCode()
+            ));
             throw new ConflictException("Feature flag code already exists");
         }
 
         FeatureFlag flag = mapper.toEntity(request);
 
         if (request.getRuleCodes() != null) {
-            List<Rule> rules = resolveRulesOrThrow(request.getRuleCodes());
-            flag.setRules(rules);
+            flag.setRules(resolveRulesOrThrow(request.getRuleCodes()));
         }
 
         FeatureFlag saved = repo.save(flag);
 
-        log.info("Feature flag created id={} code={} enabled={}",
-                saved.getId(), saved.getFlagCode(), saved.isEnabled());
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_CREATE_SUCCESS,
+                saved.getId(),
+                saved.getFlagCode(),
+                saved.isEnabled()
+        ));
 
         ws.publishFlagUpdate(mapper.toBootstrapDTO(saved));
 
@@ -62,23 +73,33 @@ public class FeatureFlagService {
     // ---------------- UPDATE ----------------
     public FeatureFlagResponse update(Long id, UpdateFeatureFlagRequest request) {
 
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_UPDATE_REQUEST,
+                id
+        ));
+
         FeatureFlag flag = repo.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Feature flag not found id={}", id);
+                    log.warn(ApiLogMessages.get(
+                            LogPropertiesKeys.FLAG_NOT_FOUND,
+                            id
+                    ));
                     return new NotFoundException("Feature flag not found");
                 });
 
         mapper.updateEntity(flag, request);
 
         if (request.getRuleCodes() != null) {
-            List<Rule> rules = resolveRulesOrThrow(request.getRuleCodes());
-            flag.setRules(rules);
+            flag.setRules(resolveRulesOrThrow(request.getRuleCodes()));
         }
 
         FeatureFlag saved = repo.save(flag);
 
-        log.info("Feature flag updated id={} code={}",
-                saved.getId(), saved.getFlagCode());
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_UPDATE_SUCCESS,
+                saved.getId(),
+                saved.getFlagCode()
+        ));
 
         ws.publishFlagUpdate(mapper.toBootstrapDTO(saved));
 
@@ -87,9 +108,18 @@ public class FeatureFlagService {
 
     // ---------------- GET ----------------
     public FeatureFlagResponse getById(Long id) {
+
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_GET_REQUEST,
+                id
+        ));
+
         FeatureFlag flag = repo.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Feature flag not found id={}", id);
+                    log.warn(ApiLogMessages.get(
+                            LogPropertiesKeys.FLAG_NOT_FOUND,
+                            id
+                    ));
                     return new NotFoundException("Feature flag not found");
                 });
 
@@ -97,21 +127,33 @@ public class FeatureFlagService {
     }
 
     public List<FeatureFlagResponse> getAll() {
+
+        log.debug(ApiLogMessages.get(LogPropertiesKeys.FLAG_GET_ALL_REQUEST));
+
         List<FeatureFlagResponse> list = repo.findAll().stream()
                 .map(mapper::toResponse)
                 .toList();
 
-        log.debug("Retrieved {} feature flags", list.size());
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_GET_ALL_SUCCESS,
+                list.size()
+        ));
 
         return list;
     }
 
     public List<BootstrapFeatureFlagDTO> getAllBootstrap() {
+
+        log.debug(ApiLogMessages.get(LogPropertiesKeys.FLAG_BOOTSTRAP_REQUEST));
+
         List<BootstrapFeatureFlagDTO> list = repo.findAll().stream()
                 .map(mapper::toBootstrapDTO)
                 .toList();
 
-        log.debug("Retrieved {} bootstrap flags", list.size());
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_BOOTSTRAP_SUCCESS,
+                list.size()
+        ));
 
         return list;
     }
@@ -119,16 +161,27 @@ public class FeatureFlagService {
     // ---------------- DELETE ----------------
     public void delete(Long id) {
 
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_DELETE_REQUEST,
+                id
+        ));
+
         FeatureFlag flag = repo.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Feature flag not found id={}", id);
+                    log.warn(ApiLogMessages.get(
+                            LogPropertiesKeys.FLAG_NOT_FOUND,
+                            id
+                    ));
                     return new NotFoundException("Feature flag not found");
                 });
 
         repo.delete(flag);
 
-        log.info("Feature flag deleted id={} code={}",
-                id, flag.getFlagCode());
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_DELETE_SUCCESS,
+                id,
+                flag.getFlagCode()
+        ));
 
         ws.publishFlagUpdate("Flag_deleted:" + id);
     }
@@ -146,7 +199,10 @@ public class FeatureFlagService {
                     .filter(id -> !foundIds.contains(id))
                     .toList();
 
-            log.warn("Invalid rule ids {}", missing);
+            log.warn(ApiLogMessages.get(
+                    LogPropertiesKeys.FLAG_INVALID_RULE_IDS,
+                    missing
+            ));
 
             throw new NotFoundException("Invalid rule IDs: " + missing);
         }
@@ -156,11 +212,20 @@ public class FeatureFlagService {
 
     // ---------------- PAGINATION ----------------
     public Page<FeatureFlagResponse> findAllPaged(Pageable pageable) {
+
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_PAGE_REQUEST,
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        ));
+
         Page<FeatureFlagResponse> page = repo.findAll(pageable)
                 .map(mapper::toResponse);
 
-        log.debug("Feature flags page requested page={} size={} total={}",
-                pageable.getPageNumber(), pageable.getPageSize(), page.getTotalElements());
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_PAGE_SUCCESS,
+                page.getTotalElements()
+        ));
 
         return page;
     }

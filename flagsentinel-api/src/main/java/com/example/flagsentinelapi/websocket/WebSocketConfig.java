@@ -20,15 +20,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
      * (antes de que la conexión WebSocket quede establecida)
      */
 
-    /*
-        1️⃣ Cliente abre conexión WS con JWT
-        2️⃣ HandshakeInterceptor valida token
-        3️⃣ Authentication se guarda en sesión
-        4️⃣ ChannelInterceptor lo inyecta en SecurityContext
-        5️⃣ Usuario queda autenticado en STOMP
-        6️⃣ Publisher envía eventos a topics
-        7️⃣ SDK recibe actualizaciones en tiempo real
-     */
     private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
 
     @Bean
@@ -62,8 +53,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")
 
                 /*
-                 * Permitimos todos los orígenes temporalmente.
-                 * (Esto se reemplazará cuando vuelvas a configurar CORS global)
+                 * Permitimos todos los orígenes temporalmente - CAMBIAR POR CONFIGURACION CORS
                  */
                 .setAllowedOriginPatterns("*")
 
