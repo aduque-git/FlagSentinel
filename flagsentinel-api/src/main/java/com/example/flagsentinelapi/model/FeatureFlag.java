@@ -34,14 +34,11 @@ public class FeatureFlag {
 
 
     public void setRules(List<Rule> newRules) {
-//         1. Si no hay reglas nuevas, no hacemos nada
         if (newRules == null) {
             return;
         }
-        // 2. Eliminar relaciones que ya no están en la nueva lista
         this.rules.removeIf(rule -> !newRules.contains(rule));
 
-        // 3. Añadir solo las reglas nuevas que no estaban antes
         for (Rule rule : newRules) {
             if (!this.rules.contains(rule)) {
                 this.rules.add(rule);

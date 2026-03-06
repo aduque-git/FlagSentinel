@@ -6,9 +6,11 @@ import com.example.flagsentinelapi.logging.ApiLogMessages;
 import com.example.flagsentinelapi.logging.LogPropertiesKeys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Component
 public class RuleEvaluator {
 
     private static final Logger log = LoggerFactory.getLogger(RuleEvaluator.class);
@@ -43,7 +45,7 @@ public class RuleEvaluator {
                     LogPropertiesKeys.RULE_OPERATOR_UNSUPPORTED,
                     rule.getOperator()
             ));
-            throw new IllegalStateException("Unsupported operator: " + rule.getOperator());
+            throw new IllegalStateException("Unknown operator: " + rule.getOperator());
         }
 
         boolean result = operator.evaluate(actual, rule.getValue());

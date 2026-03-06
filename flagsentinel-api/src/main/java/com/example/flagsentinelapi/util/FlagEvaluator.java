@@ -4,6 +4,7 @@ import com.example.flagsentinelapi.dto.flag.FeatureFlagDTO;
 import com.example.flagsentinelapi.dto.rule.RuleDTO;
 import com.example.flagsentinelapi.logging.ApiLogMessages;
 import com.example.flagsentinelapi.logging.LogPropertiesKeys;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -12,11 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class FlagEvaluator {
 
     private static final Logger log = LoggerFactory.getLogger(FlagEvaluator.class);
 
-    private final RuleEvaluator ruleEvaluator = new RuleEvaluator();
+    private final RuleEvaluator ruleEvaluator;
 
     public boolean isEnabledFor(FeatureFlagDTO flag, Map<String, String> context) {
 
@@ -29,7 +31,6 @@ public class FlagEvaluator {
 
         log.debug(ApiLogMessages.get(LogPropertiesKeys.FLAG_EVAL_START, code));
 
-        // Disabled globally
         if (!flag.isEnabled()) {
             log.debug(ApiLogMessages.get(LogPropertiesKeys.FLAG_EVAL_DISABLED, code));
             return false;
@@ -37,13 +38,11 @@ public class FlagEvaluator {
 
         List<RuleDTO> rules = flag.getRules();
 
-        // No rules = enabled
         if (rules == null || rules.isEmpty()) {
             log.debug(ApiLogMessages.get(LogPropertiesKeys.FLAG_EVAL_NO_RULES, code));
             return true;
         }
 
-        // Evaluate rules
         for (RuleDTO rule : rules) {
 
             boolean result = ruleEvaluator.evaluate(rule, context);
