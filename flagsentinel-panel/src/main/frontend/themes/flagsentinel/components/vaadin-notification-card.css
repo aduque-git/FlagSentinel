@@ -1,0 +1,23 @@
+/* ============================
+   NOTIFICATION (OVERLAY) – WORKS
+============================ */
+
+/* Fondo del overlay */
+:host([theme~="app-notification"])::part(overlay) {
+    background: rgba(30, 30, 40, 0.95) !important;
+    border: 1px solid rgba(128, 0, 255, 0.8) !important;
+    border-radius: 10px !important;
+    padding: 12px 18px !important;
+}
+
+/* Contenido (texto) */
+:host([theme~="app-notification"])::part(content) {
+    color: #FFFFFF !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    text-align: center !important;
+}
+
+
+
+

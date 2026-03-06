@@ -1,0 +1,22 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                [%level] %d{HH:mm:ss} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- Reduce ruido de Spring -->
+    <logger name="org.springframework" level="ERROR"/>
+    <logger name="org.hibernate" level="ERROR"/>
+
+    <!-- Tu paquete en DEBUG si quieres -->
+    <logger name="com.example.flagsentinelapi" level="DEBUG"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
