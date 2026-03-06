@@ -40,7 +40,6 @@ public class DataInitializer implements CommandLineRunner {
 
         log.info(ApiLogMessages.get(LogPropertiesKeys.DATA_INIT_START));
 
-        // Crear regla
         Rule rule = new Rule();
         rule.setAttribute("country");
         rule.setOperator("equals");
@@ -48,7 +47,6 @@ public class DataInitializer implements CommandLineRunner {
 
         Rule savedRule = ruleRepo.save(rule);
 
-        // Crear flag
         FeatureFlag flag = new FeatureFlag();
         flag.setFlagCode("DEFAULT_FLAG");
         flag.setEnabled(true);

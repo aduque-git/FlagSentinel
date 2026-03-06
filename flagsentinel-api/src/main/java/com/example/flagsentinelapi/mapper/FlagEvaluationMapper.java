@@ -12,8 +12,6 @@ public class FlagEvaluationMapper {
     private static final Logger log = LoggerFactory.getLogger(FlagEvaluationMapper.class);
 
     public FlagEvaluationResponse toResponse(String key, boolean enabled, String reason) {
-        log.debug("{} - mapping response for key='{}' enabled='{}' reason='{}'", LogPropertiesKeys.FLAG_RESPONSE_SENT,
-                key, enabled, reason);
         FlagEvaluationResponse dto = new FlagEvaluationResponse();
         dto.setKey(key);
         dto.setEnabled(enabled);

@@ -7,20 +7,19 @@ Permite activar o desactivar funcionalidades en tiempo real, aplicar reglas avan
 
 ## 📦 Módulos del Proyecto
 
-- **flagsentinel-api** — 🛡️ Backend principal (Spring Boot)
-- **flagsentinel-panel** — 🌐 Panel administrativo web
-- **flagsentinel-sdk-java** — 📦 SDK para clientes Java
-- **flagsentinel-demo-app** — 🧪 Aplicación de ejemplo usando el SDK
+- 🛡️ API principal (Spring Boot)
+- 🌐 Panel administrativo web
+- 📦 SDK para clientes Java
+- 🧪 Aplicación de ejemplo usando el SDK
 
 ---
 
 ## 🚀 Características Principales
 
 - ⚡ Activación/desactivación en tiempo real  
-- 🎯 Reglas avanzadas (país, rol, atributos personalizados, porcentajes)  
-- 🔄 Propagación distribuida (Redis Pub/Sub + WebSockets)  
-- 🧠 Evaluación local en el SDK (sin llamadas constantes a la API)  
-- 📝 Auditoría completa de cambios  
+- 🎯 Reglas avanzadas
+- 🔄 Propagación distribuida (WebSockets)  
+- 🧠 Evaluación local en el SDK (sin llamadas constantes a la API)
 - 🔐 Seguridad basada en JWT  
 - 🧱 Arquitectura modular, escalable y preparada para producción  
 
@@ -28,19 +27,10 @@ Permite activar o desactivar funcionalidades en tiempo real, aplicar reglas avan
 
 ## 📚 Documentación
 
-- [🏗️ Arquitectura](./ARCHITECTURE.md)
-- [🧠 Motor de Reglas](./RULE_ENGINE.md)
-- [🔌 API Reference](./API_REFERENCE.md)
-- [🧪 Ejemplo de Uso](./USAGE_EXAMPLE.md)
-- [🔐 Seguridad](./SECURITY.md)
-- [🤝 Contribuir](./CONTRIBUTING.md)
-- [📜 Changelog](./CHANGELOG.md)
-
----
-
-## 🧪 Demo
-
-Consulta el archivo **USAGE_EXAMPLE.md** para ver un caso de uso profesional realista.
+- [🛡️ API](flagsentinel-api/README.md)
+- [🌐️ PANEL](flagsentinel-panel/README.md)
+- [📦 SDK](flagsentinel-sdk-java/README.md)
+- [🧪 DEMO](flagsentinel-demo-app/README.md)
 
 ---
 

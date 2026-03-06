@@ -1,20 +1,16 @@
 package com.example.flagsentinelapi.dto.user;
 
-public class UpdateUserRequest {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+public class UpdateUserRequest {
     private String username;
     private String role;
 
-    public UpdateUserRequest() {}
-
-    public UpdateUserRequest(String username, String role) {
-        this.username = username;
-        this.role = role;
+    public UpdateUserRequest() {
     }
-
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
 }

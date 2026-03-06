@@ -3,6 +3,8 @@ package com.example.flagsentinelapi.service;
 import com.example.flagsentinelapi.dto.flagevaluation.FlagEvaluationRequest;
 import com.example.flagsentinelapi.dto.flagevaluation.FlagEvaluationResponse;
 import com.example.flagsentinelapi.exception.BadRequestException;
+import com.example.flagsentinelapi.logging.ApiLogMessages;
+import com.example.flagsentinelapi.logging.LogPropertiesKeys;
 import com.example.flagsentinelapi.mapper.FeatureFlagMapper;
 import com.example.flagsentinelapi.mapper.FlagEvaluationMapper;
 import com.example.flagsentinelapi.model.FeatureFlag;
@@ -28,39 +30,44 @@ public class FlagEvaluationService {
 
         String key = request.getKey();
 
-        // =========================
-        // VALIDATION
-        // =========================
         if (key == null || key.isBlank()) {
-            log.warn("Flag evaluation rejected — empty key");
+
+            log.warn(ApiLogMessages.get(
+                    LogPropertiesKeys.FLAG_EVAL_INVALID_KEY
+            ));
+
             throw new BadRequestException("Flag key cannot be empty");
         }
 
-        log.debug("Evaluating feature flag key='{}'", key);
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_EVAL_REQUEST,
+                key
+        ));
 
-        // =========================
-        // FETCH FLAG
-        // =========================
         FeatureFlag flag = flagRepo.findByFlagCode(key).orElse(null);
 
         if (flag == null) {
-            log.info("Feature flag not found key='{}'", key);
+
+            log.info(ApiLogMessages.get(
+                    LogPropertiesKeys.FLAG_EVAL_FLAG_NOT_FOUND,
+                    key
+            ));
+
             return mapper.toResponse(key, false, "Flag not found");
         }
 
-        // =========================
-        // EVALUATION
-        // =========================
         boolean enabled = flagEvaluator.isEnabledFor(
                 flagMapper.toDTO(flag),
                 request.getAttributes()
         );
 
-        log.info("Feature flag evaluated key='{}' enabled='{}'", key, enabled);
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.FLAG_EVAL_RESULT,
+                key,
+                enabled
+        ));
 
-        // =========================
-        // RESPONSE
-        // =========================
+
         return mapper.toResponse(
                 flag.getFlagCode(),
                 enabled,

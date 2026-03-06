@@ -34,7 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     /*
-     * 🔹 Endpoints que nunca deben pasar por el filtro JWT
+     * Endpoints que nunca deben pasar por el filtro JWT
      * (si no se excluyen aquí, Swagger y recursos públicos fallan)
      */
     private static final List<String> PUBLIC_PATHS = List.of(
@@ -60,7 +60,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         /*
-         * 🔹 Si no hay header válido → NO se procesa JWT
+         * Si no hay header válido - NO se procesa JWT
          * Se deja continuar la cadena normalmente
          */
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -69,7 +69,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         /*
-         * 🔹 Si ya hay autenticación en contexto → evitar reprocesar
+         * Si ya hay autenticación en contexto → evitar reprocesar
          */
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
             chain.doFilter(request, response);

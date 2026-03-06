@@ -1,5 +1,7 @@
 package com.example.flagsentinelapi.service;
 
+import com.example.flagsentinelapi.logging.ApiLogMessages;
+import com.example.flagsentinelapi.logging.LogPropertiesKeys;
 import com.example.flagsentinelapi.model.User;
 import com.example.flagsentinelapi.repository.UserRepository;
 import org.slf4j.Logger;
@@ -23,19 +25,25 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        log.debug("Authentication attempt for username='{}'", username);
+        log.debug(ApiLogMessages.get(
+                LogPropertiesKeys.AUTH_LOAD_USER_REQUEST,
+                username
+        ));
 
         User user = repo.findByUsername(username)
                 .orElseThrow(() -> {
-                    // IMPORTANTE: no revelar si existe o no
-                    log.warn("Authentication failed — username not found '{}'", username);
+                    log.warn(ApiLogMessages.get(
+                            LogPropertiesKeys.AUTH_LOAD_USER_NOT_FOUND,
+                            username
+                    ));
                     return new UsernameNotFoundException("Invalid credentials");
                 });
 
-        log.info("User authenticated successfully username='{}' role='{}'",
+        log.info(ApiLogMessages.get(
+                LogPropertiesKeys.AUTH_LOAD_USER_SUCCESS,
                 user.getUsername(),
                 user.getRole()
-        );
+        ));
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
